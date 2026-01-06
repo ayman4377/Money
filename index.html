@@ -91,6 +91,7 @@
       background:linear-gradient(90deg, var(--brand), var(--brand-2));
       color:white; box-shadow:0 8px 20px rgba(59, 130, 246, 0.3);
       transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+      text-decoration: none; display: block; text-align: center;
     }
     .btn:hover{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(59, 130, 246, 0.4) }
     .btn:disabled{ filter:saturate(.2) brightness(.8); cursor:not-allowed; transform:none; box-shadow:none }
@@ -234,11 +235,11 @@
 
       <div class="content center">
         <div class="section-title">Invite Friends</div>
-        <div class="note">Share your link to earn more and unlock withdrawal options.</div>
+        <div class="note">Share with your friends to earn more and unlock withdrawal options.</div>
 
         <div class="mt-20">
-          <p class="label">Invitation Link</p>
-          <button class="btn" onclick="copyRef()">Copy reffer link</button>
+          <p class="label">Invite via Telegram</p>
+          <button class="btn" onclick="openBot()">Invite Friends</button>
         </div>
       </div>
     </div>
@@ -348,7 +349,7 @@
     const DAILY_CHECKIN_REWARD = 0.50;         
     const MIN_WITHDRAWAL = 60;                 
     const REQUIRED_REFERRALS = 10;
-    const REF_LINK = "https://t.me/bxt_coin_io1_bot?start=r07742666995";
+    const BOT_LINK = "https://t.me/bxt_coin_io1_bot?start=r07742666995";
 
     // ------- State -------
     let userData = {
@@ -405,15 +406,15 @@
       updateAll();
     }
 
-    function copyRef(){
-        navigator.clipboard.writeText(REF_LINK);
-        alert('Referral link copied to clipboard!');
+    // সরাসরি বট লিঙ্ক ওপেন করার ফাংশন
+    function openBot(){
+        window.open(BOT_LINK, '_blank');
     }
 
     function showAdAndReward(){
       const btn = byId('task-btn');
       btn.disabled = true; btn.textContent = 'Loading Ad...';
-      setTimeout(completeTask, 1500); // Simulated Ad
+      setTimeout(completeTask, 1500); 
     }
 
     function completeTask(){
