@@ -5,6 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Task Rewards — USDT</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script data-project-id="5217">
+    !function(){
+      var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
+      var d=['https://ad.gigapub.tech','https://ru-ad.gigapub.tech'],i=0,t,sc;
+      function l(){
+        sc=document.createElement('script');
+        sc.async=true;
+        sc.src=d[i]+'/script?id='+p;
+        clearTimeout(t);
+        t=setTimeout(function(){
+          sc.onload=sc.onerror=null;
+          sc.src='';
+          if(++i<d.length)l();
+        },15000);
+        sc.onload=function(){clearTimeout(t)};
+        sc.onerror=function(){clearTimeout(t);if(++i<d.length)l()};
+        document.head.appendChild(sc);
+      }
+      l();
+    }();
+  </script>
+
   <style>
     :root{
       --bg: #f8fafc;
@@ -216,7 +239,7 @@
         <div class="ad-container mt-16" id="ad-container">
           <p class="center">Click the button below to earn.</p>
           <button class="btn" onclick="showAdAndReward()" id="task-btn">Watch Ad (+0.20 USDT)</button>
-          <div id="ad-status" class="ad-status"></div>
+          <div id="ad-status" class="ad-status" style="color: var(--muted); margin-top: 10px;"></div>
         </div>
       </div>
     </div>
@@ -227,16 +250,13 @@
         <div class="title">Referrals</div>
         <button class="hdr-btn">Menu</button>
       </div>
-
       <div class="balance">
         <h2>Referrals</h2>
         <div class="balance-amount"><span id="referrals-count-page">0</span> Users</div>
       </div>
-
       <div class="content center">
         <div class="section-title">Invite Friends</div>
         <div class="note">Share with your friends to earn more and unlock withdrawal options.</div>
-
         <div class="mt-20">
           <p class="label">Invite via Telegram</p>
           <button class="btn" onclick="openBot()">Invite Friends</button>
@@ -250,30 +270,19 @@
         <div class="title">Withdraw</div>
         <button class="hdr-btn">Menu</button>
       </div>
-
       <div class="balance">
         <h2>Balance</h2>
         <div class="balance-amount" id="withdraw-balance">0.00 USDT</div>
       </div>
-
       <div class="content">
         <div class="section-title">Request Payment</div>
-        <div class="note">
-          Minimum withdrawal is <b>60.00 USDT</b>. Network: <b>TON</b>.
-        </div>
-
-        <div id="referral-warning" class="warn" style="display:none;">
-          You need at least <b>10 referrals</b> to withdraw funds.
-        </div>
-
+        <div class="note">Minimum withdrawal is <b>60.00 USDT</b>. Network: <b>TON</b>.</div>
+        <div id="referral-warning" class="warn" style="display:none;">You need at least <b>10 referrals</b> to withdraw funds.</div>
         <div class="label mt-16">Amount (USDT)</div>
         <input type="number" step="0.1" class="input" id="withdraw-amount" placeholder="Min 60.00 USDT"/>
-        
         <div class="label">TON Wallet Address</div>
         <input type="text" class="input" id="withdraw-address" placeholder="Enter your TON address"/>
-
         <button class="btn" onclick="requestWithdrawal()">Submit Request</button>
-
         <div id="withdrawal-status" class="status">
           <h4 style="margin-bottom:6px;">Success!</h4>
           <p id="status-message"></p>
@@ -288,31 +297,17 @@
         <div class="title">Profile</div>
         <button class="hdr-btn">Menu</button>
       </div>
-
       <div class="balance">
         <h2>Balance</h2>
         <div class="balance-amount" id="profile-balance">0.00 USDT</div>
       </div>
-
       <div class="content">
         <div class="section-title">Account Summary</div>
         <div class="grid">
-          <div class="card">
-            <h4>Total Earnings</h4>
-            <div class="value"><span id="p-total-earned">0.00</span></div>
-          </div>
-          <div class="card">
-            <h4>Referrals</h4>
-            <div class="value" id="referrals-count">0</div>
-          </div>
-          <div class="card">
-            <h4>Ads Watched</h4>
-            <div class="value" id="tasks-done">0</div>
-          </div>
-          <div class="card">
-            <h4>Withdrawals</h4>
-            <div class="value" id="withdrawals-count">0</div>
-          </div>
+          <div class="card"><h4>Total Earnings</h4><div class="value"><span id="p-total-earned">0.00</span></div></div>
+          <div class="card"><h4>Referrals</h4><div class="value" id="referrals-count">0</div></div>
+          <div class="card"><h4>Ads Watched</h4><div class="value" id="tasks-done">0</div></div>
+          <div class="card"><h4>Withdrawals</h4><div class="value" id="withdrawals-count">0</div></div>
         </div>
       </div>
     </div>
@@ -356,15 +351,13 @@
       userId: 'USER' + Math.floor(100000 + Math.random()*900000),
       balance: 0,
       dailyTasksCompleted: 0,
-      lifetimeTasksCompleted: 0,
       hourlyTasksCompleted: 0,
       totalEarnings: 0,
       currentStreak: 0,
       tasksDone: 0,
       withdrawals: 0,
       referrals: 0,
-      lastCheckin: null,
-      lastTaskTime: null
+      lastCheckin: null
     };
 
     // ------- Storage -------
@@ -406,15 +399,39 @@
       updateAll();
     }
 
-    // সরাসরি বট লিঙ্ক ওপেন করার ফাংশন
-    function openBot(){
-        window.open(BOT_LINK, '_blank');
-    }
+    function openBot(){ window.open(BOT_LINK, '_blank'); }
 
+    // ------- AD LOGIC WITH GIGAPUB -------
     function showAdAndReward(){
+      if(userData.dailyTasksCompleted >= DAILY_ADS_LIMIT){
+          alert("Daily limit reached!"); return;
+      }
+
       const btn = byId('task-btn');
-      btn.disabled = true; btn.textContent = 'Loading Ad...';
-      setTimeout(completeTask, 1500); 
+      const status = byId('ad-status');
+      btn.disabled = true;
+      btn.textContent = 'Loading Ad...';
+      status.textContent = "Please wait, ad is loading...";
+
+      // Gigapub show function
+      if (typeof window.showGiga === 'function') {
+        window.showGiga()
+          .then(() => {
+            // Reward the user only after ad completes successfully
+            completeTask();
+            status.textContent = "Reward added successfully!";
+          })
+          .catch(e => {
+            console.error("Ad failed:", e);
+            status.textContent = "Ad failed to load. Please try again.";
+            btn.disabled = false;
+            btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
+          });
+      } else {
+        alert("Ad provider not ready. Please refresh.");
+        btn.disabled = false;
+        btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
+      }
     }
 
     function completeTask(){
@@ -423,28 +440,21 @@
       userData.dailyTasksCompleted++;
       userData.hourlyTasksCompleted++;
       userData.tasksDone++;
-      userData.lastTaskTime = new Date();
-      saveUserData(); updateAll();
-      byId('task-btn').disabled = false;
-      byId('task-btn').textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
+      saveUserData(); 
+      updateAll();
+      
+      const btn = byId('task-btn');
+      btn.disabled = false;
+      btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
     }
 
     function requestWithdrawal(){
       const amount = parseFloat(byId('withdraw-amount').value);
       const address = byId('withdraw-address').value.trim();
-      
-      if(userData.referrals < REQUIRED_REFERRALS){
-        alert(`Minimum ${REQUIRED_REFERRALS} referrals required.`); return;
-      }
-      if(!amount || amount < MIN_WITHDRAWAL){
-        alert(`Minimum withdrawal is ${MIN_WITHDRAWAL} USDT.`); return;
-      }
-      if(amount > userData.balance){
-        alert('Insufficient balance.'); return;
-      }
-      if(!address){
-        alert('Please enter a TON address.'); return;
-      }
+      if(userData.referrals < REQUIRED_REFERRALS){ alert(`Min ${REQUIRED_REFERRALS} referrals required.`); return; }
+      if(!amount || amount < MIN_WITHDRAWAL){ alert(`Min withdrawal is ${MIN_WITHDRAWAL} USDT.`); return; }
+      if(amount > userData.balance){ alert('Insufficient balance.'); return; }
+      if(!address){ alert('Please enter a TON address.'); return; }
 
       userData.balance -= amount;
       userData.withdrawals++;
