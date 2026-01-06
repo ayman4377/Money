@@ -95,13 +95,6 @@
     .btn:hover{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(59, 130, 246, 0.4) }
     .btn:disabled{ filter:saturate(.2) brightness(.8); cursor:not-allowed; transform:none; box-shadow:none }
 
-    .btn-secondary{
-      background:transparent; color:var(--text);
-      border:1px solid #cbd5e1;
-      box-shadow:none;
-    }
-    .btn-secondary:hover{ background:#f8fafc; }
-
     .ad-container{
       background:#f8fafc; border:1px dashed #94a3b8;
       padding:18px; border-radius:18px; text-align:center; margin-top:10px;
@@ -118,15 +111,6 @@
     }
     .input::placeholder{ color:#94a3b8 }
     .input:focus{ border-color:var(--brand) }
-
-    .method{
-      display:flex; align-items:center; gap:10px;
-      background:white; border:1px solid #cbd5e1;
-      padding:12px; border-radius:14px; margin:8px 0; cursor:pointer;
-      transition:transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-    .method:hover{ transform:translateY(-1px); border-color:#94a3b8; background:#f8fafc }
-    .method input[type="radio"]{ accent-color:var(--brand) }
 
     .warn{
       margin-top:12px; padding:12px; border-radius:14px; font-weight:600;
@@ -160,22 +144,9 @@
 
     @keyframes fade{ from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:translateY(0) } }
 
-    /* Small helper labels */
-    .label{ font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.12em; margin-top:10px }
     .center{ text-align:center }
-    .mt-8{ margin-top:8px } .mt-12{ margin-top:12px } .mt-16{ margin-top:16px } .mt-20{ margin-top:20px }
-    
-    .ref-box {
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
-        padding: 12px;
-        border-radius: 12px;
-        font-size: 13px;
-        word-break: break-all;
-        margin: 10px 0;
-        color: var(--brand);
-        font-weight: 600;
-    }
+    .mt-20{ margin-top:20px }
+    .label{ font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.12em; margin-bottom:10px }
   </style>
 </head>
 <body>
@@ -266,9 +237,8 @@
         <div class="note">Share your link to earn more and unlock withdrawal options.</div>
 
         <div class="mt-20">
-          <p class="label">Your Referral Link:</p>
-          <div class="ref-box" id="ref-link">https://t.me/bxt_coin_io1_bot?start=r07742666995</div>
-          <button class="btn" onclick="copyRef()">Copy Link</button>
+          <p class="label">Invitation Link</p>
+          <button class="btn" onclick="copyRef()">Copy reffer link</button>
         </div>
       </div>
     </div>
@@ -370,30 +340,8 @@
     </div>
   </div>
 
-  <script data-project-id="5217">
-  !function(){
-    var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
-    var d=['https://ad.gigapub.tech','https://ru-ad.gigapub.tech'],i=0,t,sc;
-    function l(){
-      sc=document.createElement('script');
-      sc.async=true;
-      sc.src=d[i]+'/script?id='+p;
-      clearTimeout(t);
-      t=setTimeout(function(){
-        sc.onload=sc.onerror=null;
-        sc.src='';
-        if(++i<d.length)l();
-      },15000);
-      sc.onload=function(){clearTimeout(t)};
-      sc.onerror=function(){clearTimeout(t);if(++i<d.length)l()};
-      document.head.appendChild(sc);
-    }
-    l();
-  }();
-  </script>
-
   <script>
-    // ------- Config (USDT version) -------
+    // ------- Config -------
     const DAILY_ADS_LIMIT = 100;
     const HOURLY_ADS_LIMIT = 50;
     const AD_REWARD_AMOUNT = 0.20;             
@@ -455,7 +403,6 @@
       const map = { 'home-screen':0, 'ads-screen':1, 'ref-screen':2, 'withdraw-screen':3, 'profile-screen':4 };
       document.querySelectorAll('.nav .nav-item')[map[id]||0].classList.add('active');
       updateAll();
-      if(id === 'ads-screen') checkTaskAvailability();
     }
 
     function copyRef(){
@@ -463,34 +410,10 @@
         alert('Referral link copied to clipboard!');
     }
 
-    function checkTaskAvailability(){
-      const now = new Date();
-      const last = userData.lastTaskTime ? new Date(userData.lastTaskTime) : null;
-      if(!last || last.toDateString() !== now.toDateString()) userData.dailyTasksCompleted = 0;
-      if(!last || last.getHours() !== now.getHours()) userData.hourlyTasksCompleted = 0;
-      
-      const btn = byId('task-btn');
-      if(userData.dailyTasksCompleted >= DAILY_ADS_LIMIT){
-        btn.disabled = true; btn.textContent = 'Daily Limit Reached';
-      } else if(userData.hourlyTasksCompleted >= HOURLY_ADS_LIMIT){
-        btn.disabled = true; btn.textContent = 'Hourly Limit Reached';
-      } else {
-        btn.disabled = false; btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
-      }
-    }
-
     function showAdAndReward(){
       const btn = byId('task-btn');
       btn.disabled = true; btn.textContent = 'Loading Ad...';
-      
-      if(window.showGiga){
-        window.showGiga().then(()=>completeTask()).catch(()=>{
-          alert('Ad failed. Simulating for demo...');
-          setTimeout(completeTask, 1000);
-        });
-      } else {
-        setTimeout(completeTask, 1000);
-      }
+      setTimeout(completeTask, 1500); // Simulated Ad
     }
 
     function completeTask(){
@@ -500,7 +423,9 @@
       userData.hourlyTasksCompleted++;
       userData.tasksDone++;
       userData.lastTaskTime = new Date();
-      saveUserData(); updateAll(); checkTaskAvailability();
+      saveUserData(); updateAll();
+      byId('task-btn').disabled = false;
+      byId('task-btn').textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
     }
 
     function requestWithdrawal(){
@@ -524,7 +449,7 @@
       userData.withdrawals++;
       saveUserData(); updateAll();
       byId('withdrawal-status').style.display = 'block';
-      byId('status-message').textContent = `Request for ${fmt(amount)} USDT to ${address} submitted.`;
+      byId('status-message').textContent = `Request for ${fmt(amount)} USDT submitted.`;
     }
 
     function claimDailyReward(){
