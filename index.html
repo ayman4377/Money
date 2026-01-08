@@ -60,7 +60,6 @@
       position:relative; overflow:hidden; padding-bottom:88px;
     }
 
-    /* Header */
     .header{
       display:flex; align-items:center; justify-content:space-between;
       padding:18px 20px; background:white;
@@ -76,7 +75,6 @@
     }
     .hdr-btn:hover{ transform:translateY(-1px); background:#f1f5f9; border-color:#94a3b8 }
 
-    /* Balance */
     .balance{
       margin:20px; border-radius:20px; padding:24px 20px;
       background: linear-gradient(135deg, var(--brand), var(--brand-2));
@@ -87,27 +85,15 @@
     .balance-amount{ font-size:36px; font-weight:800; margin-top:6px }
 
     .content{ padding:20px; }
+    .section-title{ text-align:center; font-size:18px; font-weight:800; letter-spacing:.2px; margin:6px 0 18px; color:var(--text); }
+    .note{ background:#f8fafc; border:1px solid #e2e8f0; color:var(--muted); padding:14px; border-radius:16px; line-height:1.45; font-size:13px; }
 
-    .section-title{
-      text-align:center; font-size:18px; font-weight:800; letter-spacing:.2px; margin:6px 0 18px;
-      color:var(--text);
-    }
-    .note{
-      background:#f8fafc; border:1px solid #e2e8f0;
-      color:var(--muted); padding:14px; border-radius:16px; line-height:1.45; font-size:13px;
-    }
-
-    /* Grid */
     .grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:16px }
-    .card{
-      background:var(--card); border:1px solid #e2e8f0;
-      border-radius:16px; padding:16px; box-shadow:0 4px 12px rgba(0,0,0,.05);
-    }
+    .card{ background:var(--card); border:1px solid #e2e8f0; border-radius:16px; padding:16px; box-shadow:0 4px 12px rgba(0,0,0,.05); }
     .card h4{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em }
     .value{ font-size:26px; font-weight:800; margin-top:4px; color:var(--text); }
     .value small{ font-size:12px; color:var(--muted); font-weight:600; margin-left:4px }
 
-    /* Buttons */
     .btn{
       width:100%; padding:16px; border-radius:16px; border:none; cursor:pointer;
       font-weight:800; letter-spacing:.2px; margin:16px 0 2px;
@@ -119,55 +105,27 @@
     .btn:hover{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(59, 130, 246, 0.4) }
     .btn:disabled{ filter:saturate(.2) brightness(.8); cursor:not-allowed; transform:none; box-shadow:none }
 
-    .ad-container{
-      background:#f8fafc; border:1px dashed #94a3b8;
-      padding:18px; border-radius:18px; text-align:center; margin-top:10px;
-    }
+    .ad-container{ background:#f8fafc; border:1px dashed #94a3b8; padding:18px; border-radius:18px; text-align:center; margin-top:10px; }
     .ad-status{ margin-top:8px; font-size:13px }
 
-    /* Inputs */
     .input{
-      width:100%; padding:14px 14px; border-radius:14px;
-      background:white; color:var(--text);
-      border:1px solid #cbd5e1; outline:none; font-size:14px;
-      transition:border-color .12s ease, background .12s ease;
-      margin:10px 0 6px;
+      width:100%; padding:14px 14px; border-radius:14px; background:white; color:var(--text);
+      border:1px solid #cbd5e1; outline:none; font-size:14px; transition:border-color .12s ease; margin:10px 0 6px;
     }
-    .input::placeholder{ color:#94a3b8 }
-    .input:focus{ border-color:var(--brand) }
+    .warn{ margin-top:12px; padding:12px; border-radius:14px; font-weight:600; background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.3); color:#ef4444; }
+    .status{ display:none; margin-top:14px; padding:14px; border-radius:14px; background:rgba(16,185,129,.09); border:1px solid rgba(16,185,129,.35); color:#10b981; }
 
-    .warn{
-      margin-top:12px; padding:12px; border-radius:14px; font-weight:600;
-      background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.3); color:#ef4444;
-    }
-    .status{
-      display:none; margin-top:14px; padding:14px; border-radius:14px;
-      background:rgba(16,185,129,.09); border:1px solid rgba(16,185,129,.35); color:#10b981;
-    }
-
-    /* Nav */
     .nav{
-      position:fixed; left:50%; transform:translateX(-50%);
-      bottom:14px; width:100%; max-width:460px; padding:10px 12px;
-      display:grid; grid-template-columns:repeat(5,1fr); gap:10px;
-      background:white; border:1px solid #e2e8f0;
-      border-radius:18px; box-shadow:0 4px 12px rgba(0,0,0,.08);
+      position:fixed; left:50%; transform:translateX(-50%); bottom:14px; width:100%; max-width:460px; padding:10px 12px;
+      display:grid; grid-template-columns:repeat(5,1fr); gap:10px; background:white; border:1px solid #e2e8f0; border-radius:18px; box-shadow:0 4px 12px rgba(0,0,0,.08);
     }
-    .nav-item{
-      display:flex; flex-direction:column; align-items:center; gap:6px;
-      padding:10px 6px; border-radius:12px; color:var(--muted); cursor:pointer;
-      transition:transform .12s ease, background .12s ease, color .12s ease;
-      font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
-    }
+    .nav-item{ display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 6px; border-radius:12px; color:var(--muted); cursor:pointer; font-size:10px; font-weight:700; text-transform:uppercase; }
     .nav-item svg{ width:20px; height:20px }
     .nav-item.active{ color:var(--brand); background:rgba(59, 130, 246, 0.1) }
-    .nav-item:hover{ transform:translateY(-1px); background:#f8fafc }
 
     .screen{ display:none; animation:fade .25s ease }
     .screen.active{ display:block }
-
     @keyframes fade{ from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:translateY(0) } }
-
     .center{ text-align:center }
     .mt-20{ margin-top:20px }
     .label{ font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.12em; margin-bottom:10px }
@@ -177,66 +135,30 @@
   <div class="container" id="app">
 
     <div id="home-screen" class="screen active">
-      <div class="header">
-        <button class="hdr-btn">Back</button>
-        <div class="title">TASK REWARDS</div>
-        <button class="hdr-btn">Menu</button>
-      </div>
-
-      <div class="balance">
-        <h2>Balance</h2>
-        <div class="balance-amount" id="balance">0.00 USDT</div>
-      </div>
-
+      <div class="header"><button class="hdr-btn">Back</button><div class="title">TASK REWARDS</div><button class="hdr-btn">Menu</button></div>
+      <div class="balance"><h2>Balance</h2><div class="balance-amount" id="balance">0.00 USDT</div></div>
       <div class="content">
         <div class="section-title">Daily Check-in Bonus</div>
-        <div class="note">
-          Keep your streak alive and claim a small bonus every day.
-        </div>
-
+        <div class="note">Keep your streak alive and claim a small bonus every day.</div>
         <div class="grid">
-          <div class="card">
-            <h4>Current Streak</h4>
-            <div class="value"><span id="current-streak">0</span><small>Days</small></div>
-          </div>
-          <div class="card">
-            <h4>Total Earned</h4>
-            <div class="value"><span id="total-earned">0.00</span><small>USDT</small></div>
-          </div>
+          <div class="card"><h4>Current Streak</h4><div class="value"><span id="current-streak">0</span><small>Days</small></div></div>
+          <div class="card"><h4>Total Earned</h4><div class="value"><span id="total-earned">0.00</span><small>USDT</small></div></div>
         </div>
-
         <button class="btn" id="checkin-btn">Claim Daily Reward</button>
       </div>
     </div>
 
     <div id="ads-screen" class="screen">
-      <div class="header">
-        <button class="hdr-btn" onclick="showScreen('home-screen')">Back</button>
-        <div class="title">Watch Ads</div>
-        <button class="hdr-btn">Menu</button>
-      </div>
-
-      <div class="balance">
-        <h2>Balance</h2>
-        <div class="balance-amount" id="ads-balance">0.00 USDT</div>
-      </div>
-
+      <div class="header"><button class="hdr-btn" onclick="showScreen('home-screen')">Back</button><div class="title">Watch Ads</div><button class="hdr-btn">Menu</button></div>
+      <div class="balance"><h2>Balance</h2><div class="balance-amount" id="ads-balance">0.00 USDT</div></div>
       <div class="content">
         <div class="section-title">Ad Tasks</div>
         <div class="note">Earn USDT by watching advertisements. Hourly and daily limits apply.</div>
-
         <div class="grid">
-            <div class="card">
-                <h4>Daily Progress</h4>
-                <div class="value"><span id="daily-tasks">0/100</span></div>
-            </div>
-            <div class="card">
-                <h4>Hourly Limit</h4>
-                <div class="value"><span id="hourly-tasks">0/50</span></div>
-            </div>
+            <div class="card"><h4>Daily Progress</h4><div class="value"><span id="daily-tasks">0/100</span></div></div>
+            <div class="card"><h4>Hourly Limit</h4><div class="value"><span id="hourly-tasks">0/50</span></div></div>
         </div>
-
-        <div class="ad-container mt-16" id="ad-container">
+        <div class="ad-container mt-16">
           <p class="center">Click the button below to earn.</p>
           <button class="btn" onclick="showAdAndReward()" id="task-btn">Watch Ad (+0.20 USDT)</button>
           <div id="ad-status" class="ad-status" style="color: var(--muted); margin-top: 10px;"></div>
@@ -245,99 +167,51 @@
     </div>
 
     <div id="ref-screen" class="screen">
-      <div class="header">
-        <button class="hdr-btn" onclick="showScreen('home-screen')">Back</button>
-        <div class="title">Referrals</div>
-        <button class="hdr-btn">Menu</button>
-      </div>
-      <div class="balance">
-        <h2>Referrals</h2>
-        <div class="balance-amount"><span id="referrals-count-page">0</span> Users</div>
-      </div>
-      <div class="content center">
-        <div class="section-title">Invite Friends</div>
-        <div class="note">Share with your friends to earn more and unlock withdrawal options.</div>
-        <div class="mt-20">
-          <p class="label">Invite via Telegram</p>
-          <button class="btn" onclick="openBot()">Invite Friends</button>
+        <div class="header"><button class="hdr-btn" onclick="showScreen('home-screen')">Back</button><div class="title">Referrals</div><button class="hdr-btn">Menu</button></div>
+        <div class="balance"><h2>Referrals</h2><div class="balance-amount"><span id="referrals-count-page">0</span> Users</div></div>
+        <div class="content center">
+          <div class="section-title">Invite Friends</div>
+          <div class="note">Share with your friends to earn more and unlock withdrawal options.</div>
+          <button class="btn mt-20" onclick="openBot()">Invite Friends</button>
         </div>
-      </div>
     </div>
 
     <div id="withdraw-screen" class="screen">
-      <div class="header">
-        <button class="hdr-btn" onclick="showScreen('home-screen')">Back</button>
-        <div class="title">Withdraw</div>
-        <button class="hdr-btn">Menu</button>
-      </div>
-      <div class="balance">
-        <h2>Balance</h2>
-        <div class="balance-amount" id="withdraw-balance">0.00 USDT</div>
-      </div>
-      <div class="content">
-        <div class="section-title">Request Payment</div>
-        <div class="note">Minimum withdrawal is <b>60.00 USDT</b>. Network: <b>TON</b>.</div>
-        <div id="referral-warning" class="warn" style="display:none;">You need at least <b>10 referrals</b> to withdraw funds.</div>
-        <div class="label mt-16">Amount (USDT)</div>
-        <input type="number" step="0.1" class="input" id="withdraw-amount" placeholder="Min 60.00 USDT"/>
-        <div class="label">TON Wallet Address</div>
-        <input type="text" class="input" id="withdraw-address" placeholder="Enter your TON address"/>
-        <button class="btn" onclick="requestWithdrawal()">Submit Request</button>
-        <div id="withdrawal-status" class="status">
-          <h4 style="margin-bottom:6px;">Success!</h4>
-          <p id="status-message"></p>
-          <p class="mt-8" style="color:var(--muted);">Your payment will be processed soon.</p>
+        <div class="header"><button class="hdr-btn" onclick="showScreen('home-screen')">Back</button><div class="title">Withdraw</div><button class="hdr-btn">Menu</button></div>
+        <div class="balance"><h2>Balance</h2><div class="balance-amount" id="withdraw-balance">0.00 USDT</div></div>
+        <div class="content">
+          <div class="note">Minimum: <b>60 USDT</b>. Network: <b>TON</b>.</div>
+          <div id="referral-warning" class="warn" style="display:none;">Min <b>10 referrals</b> required.</div>
+          <input type="number" class="input" id="withdraw-amount" placeholder="Amount"/>
+          <input type="text" class="input" id="withdraw-address" placeholder="TON Address"/>
+          <button class="btn" onclick="requestWithdrawal()">Submit Request</button>
+          <div id="withdrawal-status" class="status"><p id="status-message"></p></div>
         </div>
-      </div>
     </div>
 
     <div id="profile-screen" class="screen">
-      <div class="header">
-        <button class="hdr-btn" onclick="showScreen('home-screen')">Back</button>
-        <div class="title">Profile</div>
-        <button class="hdr-btn">Menu</button>
-      </div>
-      <div class="balance">
-        <h2>Balance</h2>
-        <div class="balance-amount" id="profile-balance">0.00 USDT</div>
-      </div>
-      <div class="content">
-        <div class="section-title">Account Summary</div>
-        <div class="grid">
-          <div class="card"><h4>Total Earnings</h4><div class="value"><span id="p-total-earned">0.00</span></div></div>
-          <div class="card"><h4>Referrals</h4><div class="value" id="referrals-count">0</div></div>
-          <div class="card"><h4>Ads Watched</h4><div class="value" id="tasks-done">0</div></div>
-          <div class="card"><h4>Withdrawals</h4><div class="value" id="withdrawals-count">0</div></div>
+        <div class="header"><button class="hdr-btn" onclick="showScreen('home-screen')">Back</button><div class="title">Profile</div><button class="hdr-btn">Menu</button></div>
+        <div class="balance"><h2>Balance</h2><div class="balance-amount" id="profile-balance">0.00 USDT</div></div>
+        <div class="content">
+          <div class="grid">
+            <div class="card"><h4>Earnings</h4><div class="value"><span id="p-total-earned">0.00</span></div></div>
+            <div class="card"><h4>Referrals</h4><div class="value" id="referrals-count">0</div></div>
+            <div class="card"><h4>Ads</h4><div class="value" id="tasks-done">0</div></div>
+            <div class="card"><h4>Pay</h4><div class="value" id="withdrawals-count">0</div></div>
+          </div>
         </div>
-      </div>
     </div>
 
     <div class="nav">
-      <div class="nav-item active" onclick="showScreen('home-screen')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Home
-      </div>
-      <div class="nav-item" onclick="showScreen('ads-screen')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-        Ads
-      </div>
-      <div class="nav-item" onclick="showScreen('ref-screen')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Invite
-      </div>
-      <div class="nav-item" onclick="showScreen('withdraw-screen')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        Withdraw
-      </div>
-      <div class="nav-item" onclick="showScreen('profile-screen')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Profile
-      </div>
+      <div class="nav-item active" onclick="showScreen('home-screen')">Home</div>
+      <div class="nav-item" onclick="showScreen('ads-screen')">Ads</div>
+      <div class="nav-item" onclick="showScreen('ref-screen')">Invite</div>
+      <div class="nav-item" onclick="showScreen('withdraw-screen')">Pay</div>
+      <div class="nav-item" onclick="showScreen('profile-screen')">User</div>
     </div>
   </div>
 
   <script>
-    // ------- Config -------
     const DAILY_ADS_LIMIT = 100;
     const HOURLY_ADS_LIMIT = 50;
     const AD_REWARD_AMOUNT = 0.20;             
@@ -346,9 +220,7 @@
     const REQUIRED_REFERRALS = 10;
     const BOT_LINK = "https://t.me/bxt_coin_io1_bot?start=r07742666995";
 
-    // ------- State -------
     let userData = {
-      userId: 'USER' + Math.floor(100000 + Math.random()*900000),
       balance: 0,
       dailyTasksCompleted: 0,
       hourlyTasksCompleted: 0,
@@ -357,22 +229,44 @@
       tasksDone: 0,
       withdrawals: 0,
       referrals: 0,
-      lastCheckin: null
+      lastCheckin: null,
+      lastTaskDate: null, // রিসেট লজিকের জন্য
+      lastTaskHour: null  // রিসেট লজিকের জন্য
     };
 
-    // ------- Storage -------
+    function checkAndResetLimits() {
+      const now = new Date();
+      const today = now.toDateString();
+      const currentHour = today + "_" + now.getHours();
+
+      // ডেইলি লিমিট রিসেট (যদি দিন বদলে যায়)
+      if (userData.lastTaskDate !== today) {
+        userData.dailyTasksCompleted = 0;
+        userData.lastTaskDate = today;
+      }
+
+      // আওয়ারলি লিমিট রিসেট (যদি ঘণ্টা বদলে যায়)
+      if (userData.lastTaskHour !== currentHour) {
+        userData.hourlyTasksCompleted = 0;
+        userData.lastTaskHour = currentHour;
+      }
+      saveUserData();
+    }
+
     function loadUserData(){
       const saved = localStorage.getItem('usdtTaskData');
       if(saved) userData = { ...userData, ...JSON.parse(saved) };
+      checkAndResetLimits(); // লোড করার সময় চেক করা
     }
+
     function saveUserData(){
       localStorage.setItem('usdtTaskData', JSON.stringify(userData));
     }
 
-    // ------- UI helpers -------
     const fmt = (n) => (Math.round((Number(n)||0)*100)/100).toFixed(2);
 
     function updateAll(){
+      checkAndResetLimits();
       document.querySelectorAll('.balance-amount[id$="balance"]').forEach(el=>{
         el.textContent = fmt(userData.balance) + ' USDT';
       });
@@ -393,42 +287,35 @@
     function showScreen(id){
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
       byId(id).classList.add('active');
-      document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
-      const map = { 'home-screen':0, 'ads-screen':1, 'ref-screen':2, 'withdraw-screen':3, 'profile-screen':4 };
-      document.querySelectorAll('.nav .nav-item')[map[id]||0].classList.add('active');
       updateAll();
     }
 
-    function openBot(){ window.open(BOT_LINK, '_blank'); }
-
-    // ------- AD LOGIC WITH GIGAPUB -------
     function showAdAndReward(){
+      checkAndResetLimits();
+
       if(userData.dailyTasksCompleted >= DAILY_ADS_LIMIT){
-          alert("Daily limit reached!"); return;
+          alert("Daily limit reached (100)! Come back tomorrow."); return;
+      }
+      if(userData.hourlyTasksCompleted >= HOURLY_ADS_LIMIT){
+          alert("Hourly limit reached (50)! Try after one hour."); return;
       }
 
       const btn = byId('task-btn');
       const status = byId('ad-status');
       btn.disabled = true;
       btn.textContent = 'Loading Ad...';
-      status.textContent = "Please wait, ad is loading...";
 
-      // Gigapub show function
       if (typeof window.showGiga === 'function') {
-        window.showGiga()
-          .then(() => {
-            // Reward the user only after ad completes successfully
+        window.showGiga().then(() => {
             completeTask();
-            status.textContent = "Reward added successfully!";
-          })
-          .catch(e => {
-            console.error("Ad failed:", e);
-            status.textContent = "Ad failed to load. Please try again.";
+            status.textContent = "Reward added!";
+          }).catch(e => {
+            status.textContent = "Ad failed. Try again.";
             btn.disabled = false;
             btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
           });
       } else {
-        alert("Ad provider not ready. Please refresh.");
+        alert("Ad provider not ready.");
         btn.disabled = false;
         btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
       }
@@ -450,11 +337,9 @@
 
     function requestWithdrawal(){
       const amount = parseFloat(byId('withdraw-amount').value);
-      const address = byId('withdraw-address').value.trim();
-      if(userData.referrals < REQUIRED_REFERRALS){ alert(`Min ${REQUIRED_REFERRALS} referrals required.`); return; }
-      if(!amount || amount < MIN_WITHDRAWAL){ alert(`Min withdrawal is ${MIN_WITHDRAWAL} USDT.`); return; }
+      if(userData.referrals < REQUIRED_REFERRALS){ alert(`Need ${REQUIRED_REFERRALS} referrals.`); return; }
+      if(!amount || amount < MIN_WITHDRAWAL){ alert(`Min withdrawal ${MIN_WITHDRAWAL} USDT.`); return; }
       if(amount > userData.balance){ alert('Insufficient balance.'); return; }
-      if(!address){ alert('Please enter a TON address.'); return; }
 
       userData.balance -= amount;
       userData.withdrawals++;
@@ -474,6 +359,7 @@
       alert(`Claimed ${fmt(DAILY_CHECKIN_REWARD)} USDT!`);
     }
 
+    function openBot(){ window.open(BOT_LINK, '_blank'); }
     function byId(id){ return document.getElementById(id) }
     function setText(id, val){ if(byId(id)) byId(id).textContent = val; }
 
@@ -481,6 +367,8 @@
       loadUserData();
       updateAll();
       byId('checkin-btn').onclick = claimDailyReward;
+      // অটো-রিফ্রেশ চেক প্রতি ১ মিনিটে যাতে লিমিট আপডেট হয়
+      setInterval(updateAll, 60000);
     });
   </script>
 </body>
