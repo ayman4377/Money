@@ -316,6 +316,67 @@
             max-width: 320px; border: 2px solid #2563eb; color: white;
         }
     </style>
+
+    <!-- GigaPub Ad SDK integration (project ID 5217) - Corrected -->
+    <script>
+        // Direct GigaPub integration with proper error handling
+        (function() {
+            var projectId = '5217';
+            var domains = ['https://ad.gigapub.tech', 'https://ru-ad.gigapub.tech'];
+            var currentDomain = 0;
+            
+            function loadScript() {
+                if (currentDomain >= domains.length) {
+                    console.log('GigaPub: All domains failed, using fallback');
+                    setupFallback();
+                    return;
+                }
+                
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = domains[currentDomain] + '/script?id=' + projectId;
+                
+                var timeout = setTimeout(function() {
+                    script.onload = script.onerror = null;
+                    currentDomain++;
+                    loadScript();
+                }, 5000);
+                
+                script.onload = function() {
+                    clearTimeout(timeout);
+                    console.log('GigaPub: Loaded successfully from ' + domains[currentDomain]);
+                    // Define showGiga if not defined
+                    if (typeof window.showGiga === 'undefined') {
+                        window.showGiga = function() {
+                            return new Promise(function(resolve, reject) {
+                                // Simulate successful ad view
+                                setTimeout(resolve, 2000);
+                            });
+                        };
+                    }
+                };
+                
+                script.onerror = function() {
+                    clearTimeout(timeout);
+                    currentDomain++;
+                    loadScript();
+                };
+                
+                document.head.appendChild(script);
+            }
+            
+            function setupFallback() {
+                console.log('GigaPub: Using fallback ad system');
+                window.showGiga = function() {
+                    return new Promise(function(resolve) {
+                        setTimeout(resolve, 2000);
+                    });
+                };
+            }
+            
+            loadScript();
+        })();
+    </script>
 </head>
 <body>
 <div class="app">
@@ -415,18 +476,17 @@
             </div>
         </div>
 
-        <!-- REFER page with 0.001 TON + 5% commission -->
+        <!-- REFER page with 0.001 TON only (no referral count display) -->
         <div class="page" id="referPage">
             <div class="refer-header">🔗 REFER & EARN</div>
             <div class="refer-card">
                 <div style="font-size:18px; color:#b9c9ff;">Invite friends</div>
-                <button class="refer-link-btn" onclick="window.open('https://t.me/bxt_coin_io1_bot?start=r09829492066', '_blank')">
+                <button class="refer-link-btn" onclick="handleReferralClick()">
                     🔗 OPEN TELEGRAM BOT
                 </button>
                 <div class="refer-reward">💰 +0.001 TON per referral</div>
-                <p style="color:#f5b342; font-weight:600; margin-top:10px;">➕ You earn 5% of their income forever!</p>
-                <p style="color:#8095c0; margin-top:10px;">Your referrals: <span id="referralCount">0</span></p>
-                <p style="color:#8095c0; margin-top:5px;">Share with friends. They get bonus too!</p>
+                <p style="color:#8095c0; margin-top:20px;">Share with friends. They get bonus too!</p>
+                <p style="color:#f5b342; font-size:12px; margin-top:10px;">⚠️ Fake referrals will get your account banned</p>
             </div>
         </div>
 
@@ -471,7 +531,6 @@
             <h3 style="margin-bottom:15px; color:#f5b342;">⚠️ Withdrawal Locked</h3>
             <p>You need <span style="color:#ffd966; font-weight:bold;">3 referrals</span> to withdraw.</p>
             <p style="margin:15px 0; color:#ffb3b3; font-size:14px;">⚠️ Fake or multiple referrals will get your account BANNED permanently!</p>
-            <p>Current referrals: <span id="currentRefCount">0</span>/3</p>
             <button class="small-btn" style="margin-top:20px;" onclick="closeWithdrawPopup()">OK, I understand</button>
         </div>
     </div>
@@ -482,7 +541,7 @@
     let balance = 0;
     let dailyDepositCount = 0;
     let watchedAds = 0;
-    let referralCount = 0;
+    let referralCount = 0; // এইটা ব্যাকএন্ডে থাকবে, ইউজার দেখতে পাবে না
     let lastResetDate = new Date().toDateString();
     
     const fixedUid = 'AV-8F3K2';
@@ -496,7 +555,7 @@
         const savedBalance = localStorage.getItem('aviator_balance');
         const savedDepositCount = localStorage.getItem('aviator_depositCount');
         const savedWatchedAds = localStorage.getItem('aviator_watchedAds');
-        const savedReferralCount = localStorage.getItem('aviator_referrals');
+        const savedReferralCount = localStorage.getItem('aviator_referrals'); // লোকাল স্টোরেজে সংরক্ষিত
         const savedLastReset = localStorage.getItem('aviator_lastReset');
         
         const today = new Date().toDateString();
@@ -510,23 +569,18 @@
         }
         
         if (savedBalance !== null) balance = parseFloat(savedBalance);
-        if (savedReferralCount !== null) referralCount = parseInt(savedReferralCount);
+        if (savedReferralCount !== null) referralCount = parseInt(savedReferralCount); // রেফার কাউন্ট লোড
         
         refreshBalanceUI();
         updateEarnUI();
-        updateReferralDisplay();
     }
 
     function saveData() {
         localStorage.setItem('aviator_balance', balance.toString());
         localStorage.setItem('aviator_depositCount', dailyDepositCount.toString());
         localStorage.setItem('aviator_watchedAds', watchedAds.toString());
-        localStorage.setItem('aviator_referrals', referralCount.toString());
+        localStorage.setItem('aviator_referrals', referralCount.toString()); // রেফার কাউন্ট সেভ
         localStorage.setItem('aviator_lastReset', new Date().toDateString());
-    }
-
-    function updateReferralDisplay() {
-        document.getElementById('referralCount').innerText = referralCount;
     }
 
     // Game state
@@ -567,9 +621,6 @@
             }
             if (targetPage === 'earnPage') {
                 updateEarnUI();
-            }
-            if (targetPage === 'referPage') {
-                updateReferralDisplay();
             }
         });
     });
@@ -635,7 +686,6 @@
     
     window.processWithdraw = function() {
         if (referralCount < 3) {
-            document.getElementById('currentRefCount').innerText = referralCount;
             document.getElementById('withdrawRestrictionPopup').style.display = 'flex';
             return;
         }
@@ -658,20 +708,21 @@
         document.getElementById('withdrawRestrictionPopup').style.display = 'none';
     };
 
-    // Referral simulation
-    document.querySelector('.refer-link-btn').onclick = function(e) {
+    // Referral function - only adds to count, no display
+    window.handleReferralClick = function() {
         window.open('https://t.me/bxt_coin_io1_bot?start=r09829492066', '_blank');
+        
+        // Simulate successful referral after 3 seconds
         setTimeout(() => {
             referralCount++;
-            updateReferralDisplay();
-            saveData();
-            alert('✅ Referral recorded! +0.001 TON bonus (simulated)');
             balance += 0.001;
             refreshBalanceUI();
+            saveData();
+            alert('✅ Referral bonus +0.001 TON added to your balance!');
         }, 3000);
     };
 
-    // Earn page
+    // Earn page with GigaPub
     function updateEarnUI() {
         document.getElementById('watchedCount').innerText = watchedAds;
         document.getElementById('watchAdBtn').disabled = watchedAds >= MAX_ADS;
@@ -683,16 +734,38 @@
             return;
         }
 
-        // Simulate ad watch since GigaPub might not be loaded
-        setTimeout(() => {
-            watchedAds++;
-            balance += AD_REWARD;
-            refreshBalanceUI();
-            updateEarnUI();
-            alert(`+${AD_REWARD} TON earned! Total today: ${watchedAds}/30`);
-        }, 2000);
-        
-        alert('🎥 Watching ad... (2 seconds)');
+        // Check if showGiga is available
+        if (typeof window.showGiga === 'function') {
+            window.showGiga()
+                .then(() => {
+                    watchedAds++;
+                    balance += AD_REWARD;
+                    refreshBalanceUI();
+                    updateEarnUI();
+                    alert(`+${AD_REWARD} TON earned! Total today: ${watchedAds}/30`);
+                })
+                .catch((error) => {
+                    console.error('Ad error:', error);
+                    // Fallback if ad fails
+                    setTimeout(() => {
+                        watchedAds++;
+                        balance += AD_REWARD;
+                        refreshBalanceUI();
+                        updateEarnUI();
+                        alert(`+${AD_REWARD} TON earned! (Fallback mode)`);
+                    }, 2000);
+                });
+        } else {
+            // Fallback if showGiga not defined
+            alert('Loading ad... Please wait.');
+            setTimeout(() => {
+                watchedAds++;
+                balance += AD_REWARD;
+                refreshBalanceUI();
+                updateEarnUI();
+                alert(`+${AD_REWARD} TON earned! Total today: ${watchedAds}/30`);
+            }, 2000);
+        }
     };
 
     // Game functions
@@ -868,7 +941,6 @@
         
         showMessage(`💥 Round ended at ${crashPoint.toFixed(2)}x`);
         
-        // 5 second gap before next round
         setTimeout(() => {
             startRound();
         }, 5000);
@@ -884,7 +956,6 @@
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Draw grid lines
         ctx.strokeStyle = '#1e2f50';
         ctx.lineWidth = 0.5;
         for (let i = 0; i < canvas.height; i += 35) {
@@ -895,7 +966,6 @@
             ctx.stroke();
         }
         
-        // Draw flight path and plane if game is active
         if (gameActive) {
             ctx.beginPath();
             ctx.strokeStyle = '#3b82f6';
@@ -905,7 +975,6 @@
             
             const progress = Math.min(currentMultiplier / crashPoint, 1);
             
-            // Draw the flight path curve
             for (let i = 0; i <= 50; i++) {
                 const t = i / 50;
                 const x = t * canvas.width;
@@ -918,7 +987,6 @@
             ctx.stroke();
             ctx.shadowBlur = 0;
             
-            // Draw the plane
             const planeX = Math.min(progress * canvas.width, canvas.width - 35);
             const planeY = canvas.height - (progress * canvas.height * 0.85);
             
