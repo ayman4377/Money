@@ -1,375 +1,933 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Task Rewards — USDT</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <script data-project-id="5217">
-    !function(){
-      var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
-      var d=['https://ad.gigapub.tech','https://ru-ad.gigapub.tech'],i=0,t,sc;
-      function l(){
-        sc=document.createElement('script');
-        sc.async=true;
-        sc.src=d[i]+'/script?id='+p;
-        clearTimeout(t);
-        t=setTimeout(function(){
-          sc.onload=sc.onerror=null;
-          sc.src='';
-          if(++i<d.length)l();
-        },15000);
-        sc.onload=function(){clearTimeout(t)};
-        sc.onerror=function(){clearTimeout(t);if(++i<d.length)l()};
-        document.head.appendChild(sc);
-      }
-      l();
-    }();
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AVIATOR · TON CASINO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
 
-  <style>
-    :root{
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --card-2:#f1f5f9;
-      --text:#1e293b;
-      --muted:#64748b;
-      --brand:#3b82f6;
-      --brand-2:#1d4ed8;
-      --accent:#f59e0b;
-      --danger:#ef4444;
-      --success:#10b981;
-      --shadow: 0 10px 25px rgba(0,0,0,.08);
-      --radius: 16px;
-    }
+        body {
+            background: #030712;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    *{ box-sizing:border-box; margin:0; padding:0 }
-    html,body{ height:100% }
-    body{
-      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      display:flex; justify-content:center; align-items:center; padding:20px;
-    }
+        /* main mobile shell */
+        .app {
+            width: 100%;
+            max-width: 400px;
+            background: #0b101f;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 30px #1e2b5a;
+            border-radius: 32px 32px 0 0;
+            overflow: hidden;
+            position: relative;
+        }
 
-    .container{
-      width:100%; max-width:460px; min-height:92vh;
-      background:white;
-      border-radius:24px; box-shadow:var(--shadow);
-      position:relative; overflow:hidden; padding-bottom:88px;
-    }
+        /* bottom navigation */
+        .tab-bar {
+            background: #0f172f;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 10px 12px;
+            border-top: 2px solid #25335c;
+            border-radius: 30px 30px 0 0;
+        }
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6f7fa5;
+            font-size: 12px;
+            font-weight: 500;
+            gap: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 6px 0;
+            border-radius: 30px;
+        }
+        .tab-item.active {
+            background: #1e2b4a;
+            color: white;
+            box-shadow: 0 0 10px #3b5b9b;
+        }
+        .tab-item span { font-size: 22px; }
 
-    .header{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:18px 20px; background:white;
-      border-bottom:1px solid #e2e8f0;
-      position:sticky; top:0; z-index:5;
-    }
-    .header .title{ font-weight:700; letter-spacing:.2px; color:var(--text); }
-    .hdr-btn{
-      font-size:12px; padding:8px 12px; border-radius:12px; border:1px solid #cbd5e1;
-      background:white; color:var(--text); cursor:pointer;
-      transition:transform .12s ease, background .12s ease, border-color .12s ease;
-      font-weight:600;
-    }
-    .hdr-btn:hover{ transform:translateY(-1px); background:#f1f5f9; border-color:#94a3b8 }
+        /* pages container */
+        .pages {
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: none;
+            position: relative;
+        }
+        .page {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            overflow-y: auto;
+            padding-bottom: 10px;
+        }
+        .page.active { display: flex; }
 
-    .balance{
-      margin:20px; border-radius:20px; padding:24px 20px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      border:1px solid rgba(59, 130, 246, 0.2);
-      color:white;
-    }
-    .balance h2{ font-size:13px; font-weight:600; opacity:0.9; text-transform:uppercase; letter-spacing:.12em }
-    .balance-amount{ font-size:36px; font-weight:800; margin-top:6px }
+        /* ----- GAME PAGE (aviator) ----- */
+        .game-header {
+            background: #10172b;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #23315e;
+        }
+        .logo h1 {
+            background: linear-gradient(135deg,#80b3ff,#c2a2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+            font-weight: 800;
+        }
+        .balance-badge {
+            background: #1e2b4a;
+            border-radius: 40px;
+            padding: 8px 18px;
+            border: 1px solid #4c6bb0;
+            color: white;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-    .content{ padding:20px; }
-    .section-title{ text-align:center; font-size:18px; font-weight:800; letter-spacing:.2px; margin:6px 0 18px; color:var(--text); }
-    .note{ background:#f8fafc; border:1px solid #e2e8f0; color:var(--muted); padding:14px; border-radius:16px; line-height:1.45; font-size:13px; }
+        .info-row {
+            background: #0c1425;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #1b2542;
+        }
+        .round-info { display: flex; gap: 22px; }
+        .info-cell .label { color: #8095c0; font-size: 11px; }
+        .info-cell .value { color: white; font-weight: 700; font-size: 16px; }
+        .total-bet { background:#253763; color:#ffd966; padding:4px 18px; border-radius:40px; font-weight:700; }
 
-    .grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:16px }
-    .card{ background:var(--card); border:1px solid #e2e8f0; border-radius:16px; padding:16px; box-shadow:0 4px 12px rgba(0,0,0,.05); }
-    .card h4{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em }
-    .value{ font-size:26px; font-weight:800; margin-top:4px; color:var(--text); }
-    .value small{ font-size:12px; color:var(--muted); font-weight:600; margin-left:4px }
+        .history-strip {
+            padding: 12px 18px;
+            background: #0a1222;
+            border-bottom: 2px solid #1b2542;
+        }
+        .history-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .history-item {
+            background: #1c2746;
+            padding: 6px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 800;
+            border: 1px solid #3b4f82;
+        }
+        .history-item.green { background: #0b543b; border-color:#10b981; }
+        .history-item.gold { background: #8b5e1a; border-color: #fbbf24; }
+        .history-item.purple { background: #5b21b6; border-color: #c084fc; }
+        .history-item.red { background: #991b1b; border-color: #f87171; }
 
-    .btn{
-      width:100%; padding:16px; border-radius:16px; border:none; cursor:pointer;
-      font-weight:800; letter-spacing:.2px; margin:16px 0 2px;
-      background:linear-gradient(90deg, var(--brand), var(--brand-2));
-      color:white; box-shadow:0 8px 20px rgba(59, 130, 246, 0.3);
-      transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
-      text-decoration: none; display: block; text-align: center;
-    }
-    .btn:hover{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(59, 130, 246, 0.4) }
-    .btn:disabled{ filter:saturate(.2) brightness(.8); cursor:not-allowed; transform:none; box-shadow:none }
+        .game-canvas-area {
+            flex: 1;
+            min-height: 240px;
+            background: #040a18;
+            position: relative;
+            border-bottom: 2px solid #23315e;
+        }
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .multiplier-box {
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%,-50%);
+            text-align: center;
+            width: 100%;
+            pointer-events: none;
+        }
+        .current-multiplier {
+            font-size: 70px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 0 30px #3b82f6;
+        }
+        .multiplier-label { color: #9bb0da; font-size: 13px; letter-spacing: 3px; }
 
-    .ad-container{ background:#f8fafc; border:1px dashed #94a3b8; padding:18px; border-radius:18px; text-align:center; margin-top:10px; }
-    .ad-status{ margin-top:8px; font-size:13px }
+        .bet-panel {
+            background: #0b1222;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .bet-card {
+            background: #162239;
+            border-radius: 28px;
+            padding: 18px;
+            border: 2px solid #2e3f6b;
+        }
+        .bet-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .bet-title { color: white; font-weight: 600; }
+        .bet-status {
+            background: #253550; color:#b9c9ff; padding:4px 14px; border-radius:30px; font-size:12px; font-weight:700;
+        }
+        .bet-status.playing { background: #1d4ed8; color:white; }
+        .bet-status.won { background: #6d28d9; color:white; }
+        .bet-status.lost { background: #b91c1c; color:white; }
 
-    .input{
-      width:100%; padding:14px 14px; border-radius:14px; background:white; color:var(--text);
-      border:1px solid #cbd5e1; outline:none; font-size:14px; transition:border-color .12s ease; margin:10px 0 6px;
-    }
-    .warn{ margin-top:12px; padding:12px; border-radius:14px; font-weight:600; background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.3); color:#ef4444; }
-    .status{ display:none; margin-top:14px; padding:14px; border-radius:14px; background:rgba(16,185,129,.09); border:1px solid rgba(16,185,129,.35); color:#10b981; }
+        .amount-row {
+            display: flex; gap: 8px; align-items: center; margin-bottom: 12px;
+        }
+        .amount-input {
+            flex:1; background:#1e2b4a; border:2px solid #304272; border-radius:40px; padding:14px; color:white;
+            font-size:20px; font-weight:700; text-align:center;
+        }
+        .amount-btn {
+            background:#1e2b4a; border:2px solid #304272; border-radius:40px; width:50px; height:50px;
+            color:white; font-size:26px; font-weight:700; cursor:pointer;
+        }
+        .auto-row {
+            display:flex; align-items:center; gap:12px; background:#1b2545; border-radius:40px; padding:8px 16px; margin-bottom:14px;
+        }
+        .auto-input {
+            width:80px; background:#1e2b4a; border:2px solid #304272; border-radius:40px; padding:8px; color:white;
+            text-align:center;
+        }
+        .cashout-btn {
+            width:100%; background:linear-gradient(145deg,#2563eb,#1e40af); border-radius:40px; padding:16px;
+            color:white; font-weight:800; border:2px solid #60a5fa; cursor:pointer;
+        }
+        .cashout-btn:disabled { opacity:0.3; }
 
-    .nav{
-      position:fixed; left:50%; transform:translateX(-50%); bottom:14px; width:100%; max-width:460px; padding:10px 12px;
-      display:grid; grid-template-columns:repeat(5,1fr); gap:10px; background:white; border:1px solid #e2e8f0; border-radius:18px; box-shadow:0 4px 12px rgba(0,0,0,.08);
-    }
-    .nav-item{ display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 6px; border-radius:12px; color:var(--muted); cursor:pointer; font-size:10px; font-weight:700; text-transform:uppercase; }
-    .nav-item svg{ width:20px; height:20px }
-    .nav-item.active{ color:var(--brand); background:rgba(59, 130, 246, 0.1) }
+        /* ----- HOME PAGE (wallet) ----- */
+        .home-header {
+            background: #10172b; padding: 20px 20px 30px;
+            border-bottom: 2px solid #25355a;
+        }
+        .home-header h2 { color:white; font-size:28px; font-weight:600; margin-bottom:20px; }
+        .balance-card {
+            background: #1e2b4a; border-radius: 48px; padding: 28px 20px;
+            border: 2px solid #3f5a9b; text-align: center;
+        }
+        .balance-card .label { color:#a7b9e6; font-size:15px; }
+        .balance-card .amount { color:white; font-size:60px; font-weight:800; line-height:1.2; }
+        .balance-card .currency { color:#f5b342; font-size:22px; }
 
-    .screen{ display:none; animation:fade .25s ease }
-    .screen.active{ display:block }
-    @keyframes fade{ from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:translateY(0) } }
-    .center{ text-align:center }
-    .mt-20{ margin-top:20px }
-    .label{ font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.12em; margin-bottom:10px }
-  </style>
+        .action-buttons {
+            display: flex; gap: 20px; margin: 25px 20px;
+        }
+        .action-buttons button {
+            flex:1; background:#1e2b4a; border:2px solid #3f5a9b; border-radius: 40px;
+            padding: 18px 0; color:white; font-weight:700; font-size:18px;
+            display: flex; align-items:center; justify-content:center; gap:8px;
+            cursor:pointer;
+        }
+        .action-buttons .primary { background:#2563eb; border-color:#60a5fa; }
+
+        /* deposit / withdraw panels */
+        .panel {
+            background: #162239; margin: 0 20px 20px; border-radius: 38px; padding: 20px;
+            border: 2px solid #2f4680;
+        }
+        .panel h4 { color:white; font-size:20px; margin-bottom:15px; }
+        .address-box {
+            background: #0b142b; padding: 16px; border-radius: 30px;
+            font-family: monospace; word-break: break-all; color:#ffd966;
+            border: 1px solid #3b5b9b; margin: 15px 0;
+        }
+        .input-field {
+            width:100%; background:#1e2b4a; border:2px solid #3f5a9b; border-radius:40px;
+            padding:16px 20px; color:white; font-size:16px; margin:10px 0;
+        }
+        .small-btn {
+            background:#2f4680; border:none; border-radius:40px; padding:14px 30px;
+            color:white; font-weight:600; cursor:pointer; margin-top:6px;
+        }
+        .uid-note {
+            background: #0f1b30; border-left: 5px solid #f5b342; border-radius: 24px;
+            padding: 18px; color:#cbd5ff; font-size:14px; margin:16px 0;
+        }
+
+        /* ----- REFER PAGE (button that opens link) ----- */
+        .refer-header {
+            background: #10172b; padding: 20px; color:white; font-size:26px; font-weight:600;
+        }
+        .refer-card {
+            background: #162239; margin: 20px; border-radius: 34px; padding: 25px;
+            border: 2px solid #2f4680; text-align: center;
+        }
+        .refer-link-btn {
+            background: #1e2b4a; border: 2px solid #5b7ed7; border-radius: 60px;
+            padding: 18px; color: white; font-size: 16px; font-weight:600; 
+            cursor: pointer; margin: 20px 0; 
+            transition: 0.2s; border: none;
+        }
+        .refer-link-btn:active { background: #2f3f7a; }
+        .refer-reward {
+            background: #0f1b30; border-radius: 50px; padding: 15px;
+            color: #f5b342; font-weight: 700; font-size: 18px;
+        }
+
+        /* ----- EARN PAGE with gigapub ----- */
+        .earn-header {
+            background: #10172b; padding: 20px; color:white; font-size:26px; font-weight:600;
+        }
+        .ad-card {
+            background: #162239; margin: 20px; border-radius: 34px; padding: 30px 20px;
+            border: 2px solid #2f4680; text-align: center;
+        }
+        .ad-stats {
+            display: flex; justify-content: space-between; margin: 20px 0;
+            background: #1e2b4a; border-radius: 40px; padding: 15px;
+        }
+        .watch-btn {
+            background: linear-gradient(145deg,#2563eb,#1e40af); border: none;
+            border-radius: 60px; padding: 18px 30px; color: white; font-weight: 800;
+            font-size: 20px; cursor: pointer; width: 100%;
+        }
+        .watch-btn:disabled { opacity: 0.4; background: #2d374b; }
+
+        /* simple popup */
+        .popup-overlay {
+            position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.8);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
+        }
+        .popup-content {
+            background: #162239; border-radius: 40px; padding: 30px;
+            max-width: 320px; border: 2px solid #2563eb; color: white;
+        }
+    </style>
+
+    <!-- GigaPub Ad SDK integration (project ID 5217) -->
+    <script data-project-id="5217">
+      !function(){
+        var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
+        var d=['https://ad.gigapub.tech','https://ru-ad.gigapub.tech'],i=0,t,sc;
+        function l(){
+          sc=document.createElement('script');
+          sc.async=true;
+          sc.src=d[i]+'/script?id='+p;
+          clearTimeout(t);
+          t=setTimeout(function(){
+            sc.onload=sc.onerror=null;
+            sc.src='';
+            if(++i<d.length)l();
+          },15000);
+          sc.onload=function(){clearTimeout(t)};
+          sc.onerror=function(){clearTimeout(t);if(++i<d.length)l()};
+          document.head.appendChild(sc);
+        }
+        l();
+      }();
+    </script>
+    <!-- fallback definition for showGiga -->
+    <script>
+        window.AdGigaFallback = function() {
+            return Promise.reject(new Error('Ad SDK not loaded'));
+        };
+        if (window.showGiga === undefined) {
+            window.showGiga = () => window.AdGigaFallback();
+        }
+    </script>
 </head>
 <body>
-  <div class="container" id="app">
+<div class="app">
+    <!-- Pages container -->
+    <div class="pages" id="pagesContainer">
+        <!-- HOME page (wallet, deposit/withdraw) -->
+        <div class="page active" id="homePage">
+            <div class="home-header">
+                <h2>🏠 TON CASINO</h2>
+                <div class="balance-card">
+                    <div class="label">Total balance</div>
+                    <div class="amount" id="homeBalance">0</div>
+                    <div class="currency">TON</div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="primary" onclick="showDeposit()"><span>📥</span> Deposit</button>
+                <button onclick="showWithdraw()"><span>📤</span> Withdraw</button>
+            </div>
 
-    <div id="home-screen" class="screen active">
-      <div class="header"><button class="hdr-btn">Back</button><div class="title">TASK REWARDS</div><button class="hdr-btn">Menu</button></div>
-      <div class="balance"><h2>Balance</h2><div class="balance-amount" id="balance">0.00 USDT</div></div>
-      <div class="content">
-        <div class="section-title">Daily Check-in Bonus</div>
-        <div class="note">Keep your streak alive and claim a small bonus every day.</div>
-        <div class="grid">
-          <div class="card"><h4>Current Streak</h4><div class="value"><span id="current-streak">0</span><small>Days</small></div></div>
-          <div class="card"><h4>Total Earned</h4><div class="value"><span id="total-earned">0.00</span><small>USDT</small></div></div>
+            <!-- Deposit panel with 1h delay & 2/day limit -->
+            <div id="depositPanelHome" class="panel" style="display: none;">
+                <h4>📥 Deposit TON</h4>
+                <p style="color:white;">Enter amount (min 1 TON):</p>
+                <input type="number" id="depositAmountInput" class="input-field" min="1" step="0.1" value="10" placeholder="Amount">
+                <div class="address-box" id="depositAddress">UQCiFbR0TEsk_iHjxKopxSfzeA-DxCSOi7YXwqrIsmy0KyT-</div>
+                <p style="color:#b3c7ff; font-size:14px;">Send exactly <span id="displayDepositAmount">10</span> TON to the address above.</p>
+                <div class="uid-note" id="uidDepositNote">
+                    Your UID: <span id="userUidDisplay">AV-8F3K2</span><br>
+                    ⏳ Funds will be credited after 1 hour verification.<br>
+                    📅 Maximum 2 deposits per day.
+                </div>
+                <button class="small-btn" onclick="copyDepositAddress()">📋 Copy address</button>
+                <button class="small-btn" style="background:#2563eb; margin-top:12px;" onclick="simulateSent()">✅ I have sent, OK</button>
+            </div>
+
+            <!-- Withdraw panel -->
+            <div id="withdrawPanelHome" class="panel" style="display: none;">
+                <h4>📤 Withdraw TON</h4>
+                <input type="text" class="input-field" id="withdrawAddr" placeholder="TON address (UQ...)" value="">
+                <input type="number" class="input-field" id="withdrawAmount" placeholder="Amount (min 3 TON)" min="3" step="0.1">
+                <p style="color:#ffb3b3; font-size:13px;">Minimum 3 TON · balance must be sufficient</p>
+                <button class="small-btn" onclick="processWithdraw()">Request withdrawal</button>
+            </div>
+            <div style="margin: 10px 20px; color:#7f8fb2; font-size:13px; text-align:center;">⚡ 1 TON = 1 credit · 1h delay · 2 deposits/day</div>
         </div>
-        <button class="btn" id="checkin-btn">Claim Daily Reward</button>
-      </div>
+
+        <!-- GAME page (aviator) - FULLY AUTOMATIC, min bet 0.1 TON -->
+        <div class="page" id="gamePage">
+            <div class="game-header">
+                <div class="logo"><h1>✈️ AVIATOR</h1></div>
+                <div class="balance-badge"><span>💰</span> <span id="gameBalance">0</span> TON</div>
+            </div>
+            <div class="info-row">
+                <div class="round-info">
+                    <div class="info-cell"><span class="label">ROUND</span><span class="value" id="roundId">#7421</span></div>
+                    <div class="info-cell"><span class="label">PLAYERS</span><span class="value" id="playersCount">128</span></div>
+                </div>
+                <div class="total-bet" id="totalBet">💰 $0.00</div>
+            </div>
+            <div class="history-strip"><div class="history-scroll" id="historyList"></div></div>
+            <div class="game-canvas-area">
+                <canvas id="gameCanvas"></canvas>
+                <div class="multiplier-box">
+                    <div class="current-multiplier" id="multiplier">1.00x</div>
+                    <div class="multiplier-label">FLYING</div>
+                </div>
+            </div>
+            <div class="bet-panel">
+                <!-- bet 1 - min 0.1 TON -->
+                <div class="bet-card" id="bet1Card">
+                    <div class="bet-header"><span class="bet-title">🎲 BET 1</span><span class="bet-status" id="bet1Status">READY</span></div>
+                    <div class="amount-row">
+                        <input type="number" class="amount-input" id="bet1Amount" value="0.1" min="0.1" step="0.1" onchange="updateBetAmount(1)">
+                        <button class="amount-btn" onclick="adjustBet(1, -0.1)">−</button>
+                        <button class="amount-btn" onclick="adjustBet(1, 0.1)">+</button>
+                    </div>
+                    <div class="auto-row"><span class="auto-label">🎯 AUTO</span><input type="number" class="auto-input" id="autoCashout1" value="2.0" min="1.1" step="0.1" onchange="updateAutoCashout(1)"><span style="color:white;">x</span></div>
+                    <button class="cashout-btn" id="cashoutBtn1" onclick="cashout(1)" disabled>CASHOUT BET 1</button>
+                </div>
+                <!-- bet 2 -->
+                <div class="bet-card" id="bet2Card">
+                    <div class="bet-header"><span class="bet-title">🎲 BET 2</span><span class="bet-status" id="bet2Status">INACTIVE</span></div>
+                    <div class="amount-row">
+                        <input type="number" class="amount-input" id="bet2Amount" value="0" min="0" step="0.1" onchange="updateBetAmount(2)">
+                        <button class="amount-btn" onclick="adjustBet(2, -0.1)">−</button>
+                        <button class="amount-btn" onclick="adjustBet(2, 0.1)">+</button>
+                    </div>
+                    <div class="auto-row"><span class="auto-label">🎯 AUTO</span><input type="number" class="auto-input" id="autoCashout2" value="2.0" min="1.1" step="0.1" onchange="updateAutoCashout(2)"><span style="color:white;">x</span></div>
+                    <button class="cashout-btn" id="cashoutBtn2" onclick="cashout(2)" disabled>CASHOUT BET 2</button>
+                </div>
+                <div class="message-area" id="message" style="color:#ffd966; text-align:center; padding:10px;"></div>
+            </div>
+        </div>
+
+        <!-- REFER page with 0.001 TON + 5% commission -->
+        <div class="page" id="referPage">
+            <div class="refer-header">🔗 REFER & EARN</div>
+            <div class="refer-card">
+                <div style="font-size:18px; color:#b9c9ff;">Invite friends</div>
+                <button class="refer-link-btn" onclick="window.open('https://t.me/bxt_coin_io1_bot?start=r09829492066', '_blank')">
+                    🔗 OPEN TELEGRAM BOT
+                </button>
+                <div class="refer-reward">💰 +0.001 TON per referral</div>
+                <p style="color:#f5b342; font-weight:600; margin-top:10px;">➕ You earn 5% of their income forever!</p>
+                <p style="color:#8095c0; margin-top:10px;">Share with friends. They get bonus too!</p>
+            </div>
+        </div>
+
+        <!-- EARN page with gigapub -->
+        <div class="page" id="earnPage">
+            <div class="earn-header">⚡ EARN</div>
+            <div class="ad-card">
+                <div style="font-size:28px;">📺</div>
+                <div style="color:white; font-size:20px; margin:10px 0;">Watch ads & earn</div>
+                <div class="ad-stats">
+                    <span>Watched: <span id="watchedCount">0</span>/30</span>
+                    <span>0.01 TON / ad</span>
+                </div>
+                <button class="watch-btn" id="watchAdBtn" onclick="handleWatchAd()">▶ WATCH AD</button>
+                <p style="color:#a7b9e6; margin-top:15px;">Daily limit: 30 ads · 0.01 TON each</p>
+            </div>
+        </div>
     </div>
 
-    <div id="ads-screen" class="screen">
-      <div class="header"><button class="hdr-btn" onclick="showScreen('home-screen')">Back</button><div class="title">Watch Ads</div><button class="hdr-btn">Menu</button></div>
-      <div class="balance"><h2>Balance</h2><div class="balance-amount" id="ads-balance">0.00 USDT</div></div>
-      <div class="content">
-        <div class="section-title">Ad Tasks</div>
-        <div class="note">Earn USDT by watching advertisements. Hourly and daily limits apply.</div>
-        <div class="grid">
-            <div class="card"><h4>Daily Progress</h4><div class="value"><span id="daily-tasks">0/100</span></div></div>
-            <div class="card"><h4>Hourly Limit</h4><div class="value"><span id="hourly-tasks">0/50</span></div></div>
-        </div>
-        <div class="ad-container mt-16">
-          <p class="center">Click the button below to earn.</p>
-          <button class="btn" onclick="showAdAndReward()" id="task-btn">Watch Ad (+0.20 USDT)</button>
-          <div id="ad-status" class="ad-status" style="color: var(--muted); margin-top: 10px;"></div>
-        </div>
-      </div>
+    <!-- bottom tab navigation -->
+    <div class="tab-bar">
+        <div class="tab-item active" data-page="homePage">🏠<span>Home</span></div>
+        <div class="tab-item" data-page="gamePage">✈️<span>Game</span></div>
+        <div class="tab-item" data-page="referPage">🔗<span>Refer</span></div>
+        <div class="tab-item" data-page="earnPage">⚡<span>Earn</span></div>
     </div>
 
-    <div id="ref-screen" class="screen">
-        <div class="header"><button class="hdr-btn" onclick="showScreen('home-screen')">Back</button><div class="title">Referrals</div><button class="hdr-btn">Menu</button></div>
-        <div class="balance"><h2>Referrals</h2><div class="balance-amount"><span id="referrals-count-page">0</span> Users</div></div>
-        <div class="content center">
-          <div class="section-title">Invite Friends</div>
-          <div class="note">Share with your friends to earn more and unlock withdrawal options.</div>
-          <button class="btn mt-20" onclick="openBot()">Invite Friends</button>
+    <!-- popup (deposit verification with 1h delay) -->
+    <div class="popup-overlay" id="depositPopup">
+        <div class="popup-content">
+            <h3 style="margin-bottom:15px;">⏳ Deposit pending</h3>
+            <p id="popupUid">UID: AV-8F3K2</p>
+            <p>Your transaction is being verified. It will be credited after 1 hour.<br>Remaining today: <span id="depositsLeft">2</span>/2 deposits.</p>
+            <button class="small-btn" style="margin-top:20px;" onclick="closePopup()">OK</button>
         </div>
     </div>
+</div>
 
-    <div id="withdraw-screen" class="screen">
-        <div class="header"><button class="hdr-btn" onclick="showScreen('home-screen')">Back</button><div class="title">Withdraw</div><button class="hdr-btn">Menu</button></div>
-        <div class="balance"><h2>Balance</h2><div class="balance-amount" id="withdraw-balance">0.00 USDT</div></div>
-        <div class="content">
-          <div class="note">Minimum: <b>60 USDT</b>. Network: <b>TON</b>.</div>
-          <div id="referral-warning" class="warn" style="display:none;">Min <b>10 referrals</b> required.</div>
-          <input type="number" class="input" id="withdraw-amount" placeholder="Amount"/>
-          <input type="text" class="input" id="withdraw-address" placeholder="TON Address"/>
-          <button class="btn" onclick="requestWithdrawal()">Submit Request</button>
-          <div id="withdrawal-status" class="status"><p id="status-message"></p></div>
-        </div>
-    </div>
+<script>
+    // ---------- GLOBAL STATE ----------
+    let balance = 0;                      // user balance in TON (starting 0)
+    const fixedUid = 'AV-8F3K2';
+    const depositTonAddress = "UQCiFbR0TEsk_iHjxKopxSfzeA-DxCSOi7YXwqrIsmy0KyT-";
 
-    <div id="profile-screen" class="screen">
-        <div class="header"><button class="hdr-btn" onclick="showScreen('home-screen')">Back</button><div class="title">Profile</div><button class="hdr-btn">Menu</button></div>
-        <div class="balance"><h2>Balance</h2><div class="balance-amount" id="profile-balance">0.00 USDT</div></div>
-        <div class="content">
-          <div class="grid">
-            <div class="card"><h4>Earnings</h4><div class="value"><span id="p-total-earned">0.00</span></div></div>
-            <div class="card"><h4>Referrals</h4><div class="value" id="referrals-count">0</div></div>
-            <div class="card"><h4>Ads</h4><div class="value" id="tasks-done">0</div></div>
-            <div class="card"><h4>Pay</h4><div class="value" id="withdrawals-count">0</div></div>
-          </div>
-        </div>
-    </div>
+    // Deposit limits: 2 per day, 1h delay simulation
+    let dailyDepositCount = 0;
+    const MAX_DAILY_DEPOSITS = 2;
 
-    <div class="nav">
-      <div class="nav-item active" onclick="showScreen('home-screen')">Home</div>
-      <div class="nav-item" onclick="showScreen('ads-screen')">Ads</div>
-      <div class="nav-item" onclick="showScreen('ref-screen')">Invite</div>
-      <div class="nav-item" onclick="showScreen('withdraw-screen')">Pay</div>
-      <div class="nav-item" onclick="showScreen('profile-screen')">User</div>
-    </div>
-  </div>
+    // bet states for game page (min bet 0.1)
+    let gameActive = false;
+    let currentMultiplier = 1.00;
+    let crashPoint = 1.00;
+    let gameInterval;
+    let roundId = 7421;
+    let bets = {
+        1: { active: false, amount: 0.1, autoCashout: 2.0, cashedOut: false, won: false },
+        2: { active: false, amount: 0, autoCashout: 2.0, cashedOut: false, won: false }
+    };
+    let history = [2.35, 1.87, 45.23, 3.45, 12.67, 1.23, 5.67, 23.45, 1.56, 67.89];
 
-  <script>
-    const DAILY_ADS_LIMIT = 100;
-    const HOURLY_ADS_LIMIT = 50;
-    const AD_REWARD_AMOUNT = 0.20;             
-    const DAILY_CHECKIN_REWARD = 0.50;         
-    const MIN_WITHDRAWAL = 60;                 
-    const REQUIRED_REFERRALS = 10;
-    const BOT_LINK = "https://t.me/bxt_coin_io1_bot?start=r07742666995";
+    // earn page state
+    let watchedAds = 0;
+    const MAX_ADS = 30;
+    const AD_REWARD = 0.01;
 
-    let userData = {
-      balance: 0,
-      dailyTasksCompleted: 0,
-      hourlyTasksCompleted: 0,
-      totalEarnings: 0,
-      currentStreak: 0,
-      tasksDone: 0,
-      withdrawals: 0,
-      referrals: 0,
-      lastCheckin: null,
-      lastTaskDate: null, // রিসেট লজিকের জন্য
-      lastTaskHour: null  // রিসেট লজিকের জন্য
+    // canvas
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // ----- helper: update all balances -----
+    function refreshBalanceUI() {
+        document.getElementById('homeBalance').innerText = balance.toFixed(2);
+        document.getElementById('gameBalance').innerText = balance.toFixed(2);
+    }
+
+    // ----- PAGE NAVIGATION -----
+    const tabs = document.querySelectorAll('.tab-item');
+    const pages = document.querySelectorAll('.page');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetPage = tab.dataset.page;
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            pages.forEach(p => p.classList.remove('active'));
+            document.getElementById(targetPage).classList.add('active');
+
+            if (targetPage !== 'homePage') {
+                document.getElementById('depositPanelHome').style.display = 'none';
+                document.getElementById('withdrawPanelHome').style.display = 'none';
+            }
+            if (targetPage === 'earnPage') {
+                updateEarnUI();
+            }
+        });
+    });
+
+    // ----- HOME PAGE (deposit / withdraw) -----
+    window.showDeposit = function() {
+        if (dailyDepositCount >= MAX_DAILY_DEPOSITS) {
+            alert('❌ Daily deposit limit reached (2/2). Come back tomorrow.');
+            return;
+        }
+        document.getElementById('withdrawPanelHome').style.display = 'none';
+        document.getElementById('depositPanelHome').style.display = 'block';
+        document.getElementById('userUidDisplay').innerText = fixedUid;
+        const amtInput = document.getElementById('depositAmountInput');
+        amtInput.oninput = function() {
+            document.getElementById('displayDepositAmount').innerText = amtInput.value || '1';
+        };
+    };
+    window.showWithdraw = function() {
+        document.getElementById('depositPanelHome').style.display = 'none';
+        document.getElementById('withdrawPanelHome').style.display = 'block';
+    };
+    window.copyDepositAddress = function() {
+        navigator.clipboard.writeText(depositTonAddress).then(() => alert('✅ Address copied'));
+    };
+    window.simulateSent = function() {
+        if (dailyDepositCount >= MAX_DAILY_DEPOSITS) {
+            alert('❌ Daily deposit limit reached.');
+            return;
+        }
+        const amt = parseFloat(document.getElementById('depositAmountInput').value) || 1;
+        if (amt < 1) { alert('Minimum deposit 1 TON'); return; }
+        
+        dailyDepositCount++;
+        // Show pending popup now
+        document.getElementById('depositPopup').style.display = 'flex';
+        document.getElementById('popupUid').innerText = `UID: ${fixedUid} | Amount: ${amt} TON`;
+        document.getElementById('depositsLeft').innerText = MAX_DAILY_DEPOSITS - dailyDepositCount;
+        
+        // Close deposit panel
+        document.getElementById('depositPanelHome').style.display = 'none';
+        
+        // Simulate 1 hour delay before crediting
+        setTimeout(() => {
+            balance += amt;
+            refreshBalanceUI();
+            alert(`✅ Deposit of ${amt} TON has been credited after 1 hour.`);
+        }, 3600000); // 1 hour in ms (3600000)
+        
+        alert(`⏳ Deposit of ${amt} TON recorded. It will be credited after 1 hour verification. (${MAX_DAILY_DEPOSITS - dailyDepositCount} deposits left today)`);
+    };
+    window.closePopup = function() {
+        document.getElementById('depositPopup').style.display = 'none';
+    };
+    window.processWithdraw = function() {
+        const addr = document.getElementById('withdrawAddr').value.trim();
+        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        if (!addr.startsWith('UQ')) return alert('Invalid TON address (starts with UQ)');
+        if (isNaN(amount) || amount < 3) return alert('Minimum withdrawal 3 TON');
+        if (amount > balance) return alert('Insufficient balance');
+
+        balance -= amount;
+        refreshBalanceUI();
+        alert(`⏳ Withdrawal request: ${amount} TON to ${addr.substr(0,6)}...\nIt will be processed soon.`);
+        document.getElementById('withdrawAddr').value = '';
+        document.getElementById('withdrawAmount').value = '';
+        document.getElementById('withdrawPanelHome').style.display = 'none';
     };
 
-    function checkAndResetLimits() {
-      const now = new Date();
-      const today = now.toDateString();
-      const currentHour = today + "_" + now.getHours();
+    // ----- REFER page (button already works) -----
 
-      // ডেইলি লিমিট রিসেট (যদি দিন বদলে যায়)
-      if (userData.lastTaskDate !== today) {
-        userData.dailyTasksCompleted = 0;
-        userData.lastTaskDate = today;
-      }
-
-      // আওয়ারলি লিমিট রিসেট (যদি ঘণ্টা বদলে যায়)
-      if (userData.lastTaskHour !== currentHour) {
-        userData.hourlyTasksCompleted = 0;
-        userData.lastTaskHour = currentHour;
-      }
-      saveUserData();
+    // ----- EARN PAGE with gigapub -----
+    function updateEarnUI() {
+        document.getElementById('watchedCount').innerText = watchedAds;
+        document.getElementById('watchAdBtn').disabled = watchedAds >= MAX_ADS;
     }
 
-    function loadUserData(){
-      const saved = localStorage.getItem('usdtTaskData');
-      if(saved) userData = { ...userData, ...JSON.parse(saved) };
-      checkAndResetLimits(); // লোড করার সময় চেক করা
+    window.handleWatchAd = function() {
+        if (watchedAds >= MAX_ADS) {
+            alert('Daily limit reached (30 ads)');
+            return;
+        }
+
+        if (typeof window.showGiga === 'function') {
+            window.showGiga()
+                .then(() => {
+                    watchedAds++;
+                    balance += AD_REWARD;
+                    refreshBalanceUI();
+                    updateEarnUI();
+                    alert(`+${AD_REWARD} TON earned! Total today: ${watchedAds}/30`);
+                })
+                .catch((e) => {
+                    console.error('Ad error:', e);
+                    alert('Ad could not be shown. Please try again later.');
+                });
+        } else {
+            alert('Ad service not ready. Using simulation.');
+            setTimeout(() => {
+                watchedAds++;
+                balance += AD_REWARD;
+                refreshBalanceUI();
+                updateEarnUI();
+                alert(`+${AD_REWARD} TON earned! Total today: ${watchedAds}/30 (simulated)`);
+            }, 1500);
+        }
+    };
+
+    // ----- GAME PAGE (aviator logic with 0.1 min bet) - runs automatically -----
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function updateHistory() {
+        const histDiv = document.getElementById('historyList');
+        histDiv.innerHTML = history.map(v => {
+            let cls = 'green';
+            if (v >= 30) cls = 'purple';
+            else if (v >= 10) cls = 'gold';
+            else if (v <= 1.5) cls = 'red';
+            return `<span class="history-item ${cls}">${v.toFixed(2)}x</span>`;
+        }).join('');
     }
 
-    function saveUserData(){
-      localStorage.setItem('usdtTaskData', JSON.stringify(userData));
+    function updateTotalBet() {
+        let total = (bets[1].active ? bets[1].amount : 0) + (bets[2].active ? bets[2].amount : 0);
+        document.getElementById('totalBet').innerHTML = `💰 $${total.toFixed(2)}`;
     }
 
-    const fmt = (n) => (Math.round((Number(n)||0)*100)/100).toFixed(2);
-
-    function updateAll(){
-      checkAndResetLimits();
-      document.querySelectorAll('.balance-amount[id$="balance"]').forEach(el=>{
-        el.textContent = fmt(userData.balance) + ' USDT';
-      });
-      setText('total-earned', fmt(userData.totalEarnings));
-      setText('p-total-earned', fmt(userData.totalEarnings));
-      setText('current-streak', userData.currentStreak);
-      setText('tasks-done', userData.tasksDone);
-      setText('withdrawals-count', userData.withdrawals);
-      setText('referrals-count', userData.referrals);
-      setText('referrals-count-page', userData.referrals);
-      setText('daily-tasks', userData.dailyTasksCompleted + '/' + DAILY_ADS_LIMIT);
-      setText('hourly-tasks', userData.hourlyTasksCompleted + '/' + HOURLY_ADS_LIMIT);
-      
-      const rw = byId('referral-warning');
-      if(rw) rw.style.display = (userData.referrals < REQUIRED_REFERRALS) ? 'block' : 'none';
+    function updateBetAmount(betNum) {
+        const inp = document.getElementById(`bet${betNum}Amount`);
+        let val = parseFloat(inp.value) || 0;
+        if (val < 0) val = 0;
+        if (betNum === 1 && val < 0.1) val = 0.1;
+        inp.value = val.toFixed(1);
+        bets[betNum].amount = val;
+        updateTotalBet();
+        if (!gameActive) updateBetStatus(betNum, bets[betNum].amount > 0 ? 'READY' : 'INACTIVE', bets[betNum].amount > 0 ? 'active' : '');
+    }
+    window.adjustBet = function(betNum, delta) {
+        const inp = document.getElementById(`bet${betNum}Amount`);
+        let val = parseFloat(inp.value) + delta;
+        if (val < 0) val = 0;
+        if (betNum === 1 && val < 0.1) val = 0.1;
+        inp.value = val.toFixed(1);
+        bets[betNum].amount = val;
+        updateTotalBet();
+        if (!gameActive) updateBetStatus(betNum, bets[betNum].amount > 0 ? 'READY' : 'INACTIVE', bets[betNum].amount > 0 ? 'active' : '');
+    };
+    function updateAutoCashout(betNum) {
+        const inp = document.getElementById(`autoCashout${betNum}`);
+        let v = parseFloat(inp.value) || 1.1;
+        if (v < 1.1) v = 1.1;
+        inp.value = v.toFixed(1);
+        bets[betNum].autoCashout = v;
+    }
+    function updateBetStatus(betNum, text, type) {
+        const el = document.getElementById(`bet${betNum}Status`);
+        el.textContent = text;
+        el.className = 'bet-status ' + type;
     }
 
-    function showScreen(id){
-      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-      byId(id).classList.add('active');
-      updateAll();
+    function getRandomCrashPoint() {
+        const r = Math.random();
+        if (r < 0.6) return 1 + Math.random() * 2;      // 1x - 3x
+        else if (r < 0.85) return 3 + Math.random() * 7; // 3x - 10x
+        else if (r < 0.95) return 10 + Math.random() * 20; // 10x - 30x
+        else return 30 + Math.random() * 70;            // 30x - 100x
     }
 
-    function showAdAndReward(){
-      checkAndResetLimits();
-
-      if(userData.dailyTasksCompleted >= DAILY_ADS_LIMIT){
-          alert("Daily limit reached (100)! Come back tomorrow."); return;
-      }
-      if(userData.hourlyTasksCompleted >= HOURLY_ADS_LIMIT){
-          alert("Hourly limit reached (50)! Try after one hour."); return;
-      }
-
-      const btn = byId('task-btn');
-      const status = byId('ad-status');
-      btn.disabled = true;
-      btn.textContent = 'Loading Ad...';
-
-      if (typeof window.showGiga === 'function') {
-        window.showGiga().then(() => {
-            completeTask();
-            status.textContent = "Reward added!";
-          }).catch(e => {
-            status.textContent = "Ad failed. Try again.";
-            btn.disabled = false;
-            btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
-          });
-      } else {
-        alert("Ad provider not ready.");
-        btn.disabled = false;
-        btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
-      }
+    function startAutoRound() {
+        // Always start a new round after a delay, regardless of bets
+        setTimeout(() => {
+            startRound();
+        }, 2000);
     }
 
-    function completeTask(){
-      userData.balance += AD_REWARD_AMOUNT;
-      userData.totalEarnings += AD_REWARD_AMOUNT;
-      userData.dailyTasksCompleted++;
-      userData.hourlyTasksCompleted++;
-      userData.tasksDone++;
-      saveUserData(); 
-      updateAll();
-      
-      const btn = byId('task-btn');
-      btn.disabled = false;
-      btn.textContent = `Watch Ad (+${fmt(AD_REWARD_AMOUNT)} USDT)`;
+    function startRound() {
+        if (gameActive) return;
+        
+        // Check which bets are active (based on amount)
+        bets[1].active = bets[1].amount >= 0.1;
+        bets[2].active = bets[2].amount > 0;
+        
+        let totalBet = 0;
+        if (bets[1].active) totalBet += bets[1].amount;
+        if (bets[2].active) totalBet += bets[2].amount;
+        
+        // Only deduct if there are active bets and sufficient balance
+        if (totalBet > 0) {
+            if (totalBet > balance) {
+                showMessage('⚠️ Insufficient balance! Cannot place bets.');
+                // Still start the round for viewing, but don't deduct
+                bets[1].active = false;
+                bets[2].active = false;
+            } else {
+                balance -= totalBet;
+                refreshBalanceUI();
+            }
+        }
+        
+        // Start new round - game always runs for everyone to watch
+        gameActive = true;
+        currentMultiplier = 1.00;
+        crashPoint = getRandomCrashPoint();
+        bets[1].cashedOut = false;
+        bets[2].cashedOut = false;
+        bets[1].won = false;
+        bets[2].won = false;
+        
+        // Update UI
+        document.getElementById('multiplier').textContent = '1.00x';
+        document.getElementById('roundId').textContent = `#${roundId++}`;
+        document.getElementById('playersCount').textContent = Math.floor(Math.random() * 200) + 50;
+        
+        // Update status badges based on actual active bets (after balance check)
+        if (bets[1].active) {
+            updateBetStatus(1, 'FLYING', 'playing');
+            document.getElementById('cashoutBtn1').disabled = false;
+        } else {
+            updateBetStatus(1, bets[1].amount >= 0.1 ? 'NO BALANCE' : 'READY', bets[1].amount >= 0.1 ? '' : 'active');
+            document.getElementById('cashoutBtn1').disabled = true;
+        }
+        
+        if (bets[2].active) {
+            updateBetStatus(2, 'FLYING', 'playing');
+            document.getElementById('cashoutBtn2').disabled = false;
+        } else {
+            updateBetStatus(2, bets[2].amount > 0 ? 'NO BALANCE' : 'INACTIVE', bets[2].amount > 0 ? '' : '');
+            document.getElementById('cashoutBtn2').disabled = true;
+        }
+        
+        // Game loop - updates every 50ms
+        if (gameInterval) clearInterval(gameInterval);
+        gameInterval = setInterval(() => {
+            if (!gameActive) return;
+            
+            currentMultiplier += 0.01;
+            document.getElementById('multiplier').textContent = currentMultiplier.toFixed(2) + 'x';
+            
+            // Auto cashout checks
+            if (bets[1].active && !bets[1].cashedOut && currentMultiplier >= bets[1].autoCashout) {
+                cashout(1, true);
+            }
+            if (bets[2].active && !bets[2].cashedOut && currentMultiplier >= bets[2].autoCashout) {
+                cashout(2, true);
+            }
+            
+            // Crash check
+            if (currentMultiplier >= crashPoint) {
+                crash();
+            }
+        }, 50);
     }
 
-    function requestWithdrawal(){
-      const amount = parseFloat(byId('withdraw-amount').value);
-      if(userData.referrals < REQUIRED_REFERRALS){ alert(`Need ${REQUIRED_REFERRALS} referrals.`); return; }
-      if(!amount || amount < MIN_WITHDRAWAL){ alert(`Min withdrawal ${MIN_WITHDRAWAL} USDT.`); return; }
-      if(amount > userData.balance){ alert('Insufficient balance.'); return; }
+    // Cashout function
+    window.cashout = function(betNum, isAuto = false) {
+        if (!gameActive || bets[betNum].cashedOut || !bets[betNum].active) return;
+        
+        const winAmount = bets[betNum].amount * currentMultiplier;
+        balance += winAmount;
+        refreshBalanceUI();
+        
+        bets[betNum].cashedOut = true;
+        bets[betNum].won = true;
+        
+        updateBetStatus(betNum, `WON $${winAmount.toFixed(2)}`, 'won');
+        document.getElementById(`cashoutBtn${betNum}`).disabled = true;
+        
+        showMessage(`🎉 BET ${betNum} WON $${winAmount.toFixed(2)}!`);
+    };
 
-      userData.balance -= amount;
-      userData.withdrawals++;
-      saveUserData(); updateAll();
-      byId('withdrawal-status').style.display = 'block';
-      byId('status-message').textContent = `Request for ${fmt(amount)} USDT submitted.`;
+    // Crash function - round ends
+    function crash() {
+        clearInterval(gameInterval);
+        gameActive = false;
+        
+        document.getElementById('multiplier').innerHTML = `💥 ${crashPoint.toFixed(2)}x 💥`;
+        
+        // Update any active bets that didn't cash out
+        if (bets[1].active && !bets[1].cashedOut) {
+            updateBetStatus(1, `LOST $${bets[1].amount.toFixed(2)}`, 'lost');
+            document.getElementById('cashoutBtn1').disabled = true;
+        }
+        if (bets[2].active && !bets[2].cashedOut) {
+            updateBetStatus(2, `LOST $${bets[2].amount.toFixed(2)}`, 'lost');
+            document.getElementById('cashoutBtn2').disabled = true;
+        }
+        
+        // Add to history
+        history.unshift(crashPoint);
+        if (history.length > 12) history.pop();
+        updateHistory();
+        
+        showMessage(`💥 Round ended at ${crashPoint.toFixed(2)}x`);
+        
+        // Start next round automatically
+        startAutoRound();
     }
 
-    function claimDailyReward(){
-      const today = new Date().toDateString();
-      if(userData.lastCheckin === today) return alert('Already claimed today.');
-      userData.balance += DAILY_CHECKIN_REWARD;
-      userData.totalEarnings += DAILY_CHECKIN_REWARD;
-      userData.lastCheckin = today;
-      userData.currentStreak++;
-      saveUserData(); updateAll();
-      alert(`Claimed ${fmt(DAILY_CHECKIN_REWARD)} USDT!`);
+    function showMessage(m) {
+        document.getElementById('message').textContent = m;
     }
 
-    function openBot(){ window.open(BOT_LINK, '_blank'); }
-    function byId(id){ return document.getElementById(id) }
-    function setText(id, val){ if(byId(id)) byId(id).textContent = val; }
+    // Canvas drawing - shows the plane animation
+    function drawCanvas() {
+        if (!canvas) return;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid lines
+        ctx.strokeStyle = '#1e2f50';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < canvas.height; i += 35) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#1e2f50';
+            ctx.moveTo(0, i);
+            ctx.lineTo(canvas.width, i);
+            ctx.stroke();
+        }
+        
+        // Draw flight path and plane if game is active
+        if (gameActive) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 4;
+            ctx.shadowColor = '#3b82f6';
+            ctx.shadowBlur = 20;
+            
+            const progress = Math.min(currentMultiplier / crashPoint, 1);
+            
+            // Draw the flight path curve
+            for (let i = 0; i <= 50; i++) {
+                const t = i / 50;
+                const x = t * canvas.width;
+                const y = canvas.height - (t * canvas.height * 0.85 * progress);
+                
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            // Draw the plane
+            const planeX = Math.min(progress * canvas.width, canvas.width - 35);
+            const planeY = canvas.height - (progress * canvas.height * 0.85);
+            
+            ctx.font = '32px Arial';
+            ctx.fillStyle = 'white';
+            ctx.shadowColor = '#3b82f6';
+            ctx.shadowBlur = 20;
+            ctx.fillText('✈️', planeX, Math.max(planeY, 35));
+            ctx.shadowBlur = 0;
+        }
+    }
 
-    window.addEventListener('DOMContentLoaded', ()=>{
-      loadUserData();
-      updateAll();
-      byId('checkin-btn').onclick = claimDailyReward;
-      // অটো-রিফ্রেশ চেক প্রতি ১ মিনিটে যাতে লিমিট আপডেট হয়
-      setInterval(updateAll, 60000);
-    });
-  </script>
+    // Animation loop
+    function animate() {
+        drawCanvas();
+        requestAnimationFrame(animate);
+    }
+
+    // Initialize everything
+    function init() {
+        resizeCanvas();
+        refreshBalanceUI();
+        updateHistory();
+        updateTotalBet();
+        startAutoRound(); // Start the first round
+        animate();
+        updateEarnUI();
+    }
+
+    // Start everything
+    init();
+
+    // Expose functions globally
+    window.updateBetAmount = updateBetAmount;
+    window.updateAutoCashout = updateAutoCashout;
+</script>
 </body>
 </html>
