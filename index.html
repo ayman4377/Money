@@ -476,7 +476,7 @@
             </div>
         </div>
 
-        <!-- REFER page with 0.001 TON only (no referral count display) -->
+        <!-- REFER page with 5% commission only (no instant bonus) -->
         <div class="page" id="referPage">
             <div class="refer-header">🔗 REFER & EARN</div>
             <div class="refer-card">
@@ -484,7 +484,8 @@
                 <button class="refer-link-btn" onclick="handleReferralClick()">
                     🔗 OPEN TELEGRAM BOT
                 </button>
-                <div class="refer-reward">💰 +0.001 TON per referral</div>
+                <div class="refer-reward">💰 5% lifetime commission</div>
+                <p style="color:#f5b342; font-weight:600; margin-top:10px;">You earn 5% of their income forever!</p>
                 <p style="color:#8095c0; margin-top:20px;">Share with friends. They get bonus too!</p>
                 <p style="color:#f5b342; font-size:12px; margin-top:10px;">⚠️ Fake referrals will get your account banned</p>
             </div>
@@ -541,7 +542,7 @@
     let balance = 0;
     let dailyDepositCount = 0;
     let watchedAds = 0;
-    let referralCount = 0; // এইটা ব্যাকএন্ডে থাকবে, ইউজার দেখতে পাবে না
+    let referralCount = 0; // This counts referrals for withdrawal eligibility
     let lastResetDate = new Date().toDateString();
     
     const fixedUid = 'AV-8F3K2';
@@ -549,14 +550,13 @@
     const MAX_DAILY_DEPOSITS = 2;
     const MAX_ADS = 30;
     const AD_REWARD = 0.005;
-    const REFERRAL_BONUS = 0.001; // রেফার বোনাস
 
     // Load saved data from localStorage
     function loadSavedData() {
         const savedBalance = localStorage.getItem('aviator_balance');
         const savedDepositCount = localStorage.getItem('aviator_depositCount');
         const savedWatchedAds = localStorage.getItem('aviator_watchedAds');
-        const savedReferralCount = localStorage.getItem('aviator_referrals'); // লোকাল স্টোরেজে সংরক্ষিত
+        const savedReferralCount = localStorage.getItem('aviator_referrals');
         const savedLastReset = localStorage.getItem('aviator_lastReset');
         
         const today = new Date().toDateString();
@@ -570,7 +570,7 @@
         }
         
         if (savedBalance !== null) balance = parseFloat(savedBalance);
-        if (savedReferralCount !== null) referralCount = parseInt(savedReferralCount); // রেফার কাউন্ট লোড
+        if (savedReferralCount !== null) referralCount = parseInt(savedReferralCount);
         
         refreshBalanceUI();
         updateEarnUI();
@@ -580,7 +580,7 @@
         localStorage.setItem('aviator_balance', balance.toString());
         localStorage.setItem('aviator_depositCount', dailyDepositCount.toString());
         localStorage.setItem('aviator_watchedAds', watchedAds.toString());
-        localStorage.setItem('aviator_referrals', referralCount.toString()); // রেফার কাউন্ট সেভ
+        localStorage.setItem('aviator_referrals', referralCount.toString());
         localStorage.setItem('aviator_lastReset', new Date().toDateString());
     }
 
@@ -709,19 +709,17 @@
         document.getElementById('withdrawRestrictionPopup').style.display = 'none';
     };
 
-    // Referral function - gives bonus immediately when button is clicked
+    // Referral function - only counts referrals, NO instant bonus
     window.handleReferralClick = function() {
         // Open Telegram link
         window.open('https://t.me/bxt_coin_io1_bot?start=r09829492066', '_blank');
         
-        // Give referral bonus immediately
+        // Increment referral count (for withdrawal eligibility)
         referralCount++;
-        balance += REFERRAL_BONUS;
-        refreshBalanceUI();
         saveData();
         
-        // Show success message
-        alert(`✅ Referral bonus +${REFERRAL_BONUS} TON added to your balance!`);
+        // Show message about 5% commission
+        alert(`✅ Referral recorded! You will now earn 5% lifetime commission from this friend's income.`);
     };
 
     // Earn page with GigaPub
