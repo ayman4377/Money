@@ -549,6 +549,7 @@
     const MAX_DAILY_DEPOSITS = 2;
     const MAX_ADS = 30;
     const AD_REWARD = 0.005;
+    const REFERRAL_BONUS = 0.001; // রেফার বোনাস
 
     // Load saved data from localStorage
     function loadSavedData() {
@@ -599,8 +600,8 @@
     const ctx = canvas.getContext('2d');
 
     function refreshBalanceUI() {
-        document.getElementById('homeBalance').innerText = balance.toFixed(2);
-        document.getElementById('gameBalance').innerText = balance.toFixed(2);
+        document.getElementById('homeBalance').innerText = balance.toFixed(3);
+        document.getElementById('gameBalance').innerText = balance.toFixed(3);
         saveData();
     }
 
@@ -708,18 +709,19 @@
         document.getElementById('withdrawRestrictionPopup').style.display = 'none';
     };
 
-    // Referral function - only adds to count, no display
+    // Referral function - gives bonus immediately when button is clicked
     window.handleReferralClick = function() {
+        // Open Telegram link
         window.open('https://t.me/bxt_coin_io1_bot?start=r09829492066', '_blank');
         
-        // Simulate successful referral after 3 seconds
-        setTimeout(() => {
-            referralCount++;
-            balance += 0.001;
-            refreshBalanceUI();
-            saveData();
-            alert('✅ Referral bonus +0.001 TON added to your balance!');
-        }, 3000);
+        // Give referral bonus immediately
+        referralCount++;
+        balance += REFERRAL_BONUS;
+        refreshBalanceUI();
+        saveData();
+        
+        // Show success message
+        alert(`✅ Referral bonus +${REFERRAL_BONUS} TON added to your balance!`);
     };
 
     // Earn page with GigaPub
