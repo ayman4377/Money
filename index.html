@@ -316,38 +316,6 @@
             max-width: 320px; border: 2px solid #2563eb; color: white;
         }
     </style>
-
-    <!-- GigaPub Ad SDK integration (project ID 5217) -->
-    <script data-project-id="5217">
-      !function(){
-        var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
-        var d=['https://ad.gigapub.tech','https://ru-ad.gigapub.tech'],i=0,t,sc;
-        function l(){
-          sc=document.createElement('script');
-          sc.async=true;
-          sc.src=d[i]+'/script?id='+p;
-          clearTimeout(t);
-          t=setTimeout(function(){
-            sc.onload=sc.onerror=null;
-            sc.src='';
-            if(++i<d.length)l();
-          },15000);
-          sc.onload=function(){clearTimeout(t)};
-          sc.onerror=function(){clearTimeout(t);if(++i<d.length)l()};
-          document.head.appendChild(sc);
-        }
-        l();
-      }();
-    </script>
-    <!-- fallback definition for showGiga -->
-    <script>
-        window.AdGigaFallback = function() {
-            return Promise.reject(new Error('Ad SDK not loaded'));
-        };
-        if (window.showGiga === undefined) {
-            window.showGiga = () => window.AdGigaFallback();
-        }
-    </script>
 </head>
 <body>
 <div class="app">
@@ -368,11 +336,15 @@
                 <button onclick="showWithdraw()"><span>📤</span> Withdraw</button>
             </div>
 
-            <!-- Deposit panel with 1h delay & 2/day limit -->
+            <!-- Deposit panel with sender address, 1h delay & 2/day limit -->
             <div id="depositPanelHome" class="panel" style="display: none;">
                 <h4>📥 Deposit TON</h4>
                 <p style="color:white;">Enter amount (min 1 TON):</p>
                 <input type="number" id="depositAmountInput" class="input-field" min="1" step="0.1" value="10" placeholder="Amount">
+                
+                <p style="color:white; margin-top:10px;">Your sending TON address:</p>
+                <input type="text" id="senderAddressInput" class="input-field" placeholder="UQ...">
+                
                 <div class="address-box" id="depositAddress">UQCiFbR0TEsk_iHjxKopxSfzeA-DxCSOi7YXwqrIsmy0KyT-</div>
                 <p style="color:#b3c7ff; font-size:14px;">Send exactly <span id="displayDepositAmount">10</span> TON to the address above.</p>
                 <div class="uid-note" id="uidDepositNote">
@@ -381,7 +353,7 @@
                     📅 Maximum 2 deposits per day.
                 </div>
                 <button class="small-btn" onclick="copyDepositAddress()">📋 Copy address</button>
-                <button class="small-btn" style="background:#2563eb; margin-top:12px;" onclick="simulateSent()">✅ I have sent, OK</button>
+                <button class="small-btn" style="background:#2563eb; margin-top:12px;" onclick="simulateSent()">✅ YES, I HAVE SENT</button>
             </div>
 
             <!-- Withdraw panel -->
@@ -395,7 +367,7 @@
             <div style="margin: 10px 20px; color:#7f8fb2; font-size:13px; text-align:center;">⚡ 1 TON = 1 credit · 1h delay · 2 deposits/day</div>
         </div>
 
-        <!-- GAME page (aviator) - FULLY AUTOMATIC, min bet 0.1 TON -->
+        <!-- GAME page (aviator) - FULLY AUTOMATIC, min bet 0.1 TON, 5s gap between rounds -->
         <div class="page" id="gamePage">
             <div class="game-header">
                 <div class="logo"><h1>✈️ AVIATOR</h1></div>
@@ -453,11 +425,12 @@
                 </button>
                 <div class="refer-reward">💰 +0.001 TON per referral</div>
                 <p style="color:#f5b342; font-weight:600; margin-top:10px;">➕ You earn 5% of their income forever!</p>
-                <p style="color:#8095c0; margin-top:10px;">Share with friends. They get bonus too!</p>
+                <p style="color:#8095c0; margin-top:10px;">Your referrals: <span id="referralCount">0</span></p>
+                <p style="color:#8095c0; margin-top:5px;">Share with friends. They get bonus too!</p>
             </div>
         </div>
 
-        <!-- EARN page with gigapub -->
+        <!-- EARN page with gigapub - 0.005 TON per ad -->
         <div class="page" id="earnPage">
             <div class="earn-header">⚡ EARN</div>
             <div class="ad-card">
@@ -465,10 +438,10 @@
                 <div style="color:white; font-size:20px; margin:10px 0;">Watch ads & earn</div>
                 <div class="ad-stats">
                     <span>Watched: <span id="watchedCount">0</span>/30</span>
-                    <span>0.01 TON / ad</span>
+                    <span>0.005 TON / ad</span>
                 </div>
                 <button class="watch-btn" id="watchAdBtn" onclick="handleWatchAd()">▶ WATCH AD</button>
-                <p style="color:#a7b9e6; margin-top:15px;">Daily limit: 30 ads · 0.01 TON each</p>
+                <p style="color:#a7b9e6; margin-top:15px;">Daily limit: 30 ads · 0.005 TON each</p>
             </div>
         </div>
     </div>
@@ -486,23 +459,77 @@
         <div class="popup-content">
             <h3 style="margin-bottom:15px;">⏳ Deposit pending</h3>
             <p id="popupUid">UID: AV-8F3K2</p>
+            <p id="popupSender">Sender: Not provided</p>
             <p>Your transaction is being verified. It will be credited after 1 hour.<br>Remaining today: <span id="depositsLeft">2</span>/2 deposits.</p>
             <button class="small-btn" style="margin-top:20px;" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
+    <!-- Withdrawal restriction popup (3 referrals needed + ban warning) -->
+    <div class="popup-overlay" id="withdrawRestrictionPopup">
+        <div class="popup-content">
+            <h3 style="margin-bottom:15px; color:#f5b342;">⚠️ Withdrawal Locked</h3>
+            <p>You need <span style="color:#ffd966; font-weight:bold;">3 referrals</span> to withdraw.</p>
+            <p style="margin:15px 0; color:#ffb3b3; font-size:14px;">⚠️ Fake or multiple referrals will get your account BANNED permanently!</p>
+            <p>Current referrals: <span id="currentRefCount">0</span>/3</p>
+            <button class="small-btn" style="margin-top:20px;" onclick="closeWithdrawPopup()">OK, I understand</button>
         </div>
     </div>
 </div>
 
 <script>
-    // ---------- GLOBAL STATE ----------
-    let balance = 0;                      // user balance in TON (starting 0)
+    // ---------- GLOBAL STATE WITH LOCAL STORAGE ----------
+    let balance = 0;
+    let dailyDepositCount = 0;
+    let watchedAds = 0;
+    let referralCount = 0;
+    let lastResetDate = new Date().toDateString();
+    
     const fixedUid = 'AV-8F3K2';
     const depositTonAddress = "UQCiFbR0TEsk_iHjxKopxSfzeA-DxCSOi7YXwqrIsmy0KyT-";
-
-    // Deposit limits: 2 per day, 1h delay simulation
-    let dailyDepositCount = 0;
     const MAX_DAILY_DEPOSITS = 2;
+    const MAX_ADS = 30;
+    const AD_REWARD = 0.005;
 
-    // bet states for game page (min bet 0.1)
+    // Load saved data from localStorage
+    function loadSavedData() {
+        const savedBalance = localStorage.getItem('aviator_balance');
+        const savedDepositCount = localStorage.getItem('aviator_depositCount');
+        const savedWatchedAds = localStorage.getItem('aviator_watchedAds');
+        const savedReferralCount = localStorage.getItem('aviator_referrals');
+        const savedLastReset = localStorage.getItem('aviator_lastReset');
+        
+        const today = new Date().toDateString();
+        if (savedLastReset !== today) {
+            dailyDepositCount = 0;
+            watchedAds = 0;
+            localStorage.setItem('aviator_lastReset', today);
+        } else {
+            if (savedDepositCount !== null) dailyDepositCount = parseInt(savedDepositCount);
+            if (savedWatchedAds !== null) watchedAds = parseInt(savedWatchedAds);
+        }
+        
+        if (savedBalance !== null) balance = parseFloat(savedBalance);
+        if (savedReferralCount !== null) referralCount = parseInt(savedReferralCount);
+        
+        refreshBalanceUI();
+        updateEarnUI();
+        updateReferralDisplay();
+    }
+
+    function saveData() {
+        localStorage.setItem('aviator_balance', balance.toString());
+        localStorage.setItem('aviator_depositCount', dailyDepositCount.toString());
+        localStorage.setItem('aviator_watchedAds', watchedAds.toString());
+        localStorage.setItem('aviator_referrals', referralCount.toString());
+        localStorage.setItem('aviator_lastReset', new Date().toDateString());
+    }
+
+    function updateReferralDisplay() {
+        document.getElementById('referralCount').innerText = referralCount;
+    }
+
+    // Game state
     let gameActive = false;
     let currentMultiplier = 1.00;
     let crashPoint = 1.00;
@@ -514,22 +541,16 @@
     };
     let history = [2.35, 1.87, 45.23, 3.45, 12.67, 1.23, 5.67, 23.45, 1.56, 67.89];
 
-    // earn page state
-    let watchedAds = 0;
-    const MAX_ADS = 30;
-    const AD_REWARD = 0.01;
-
-    // canvas
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // ----- helper: update all balances -----
     function refreshBalanceUI() {
         document.getElementById('homeBalance').innerText = balance.toFixed(2);
         document.getElementById('gameBalance').innerText = balance.toFixed(2);
+        saveData();
     }
 
-    // ----- PAGE NAVIGATION -----
+    // Page navigation
     const tabs = document.querySelectorAll('.tab-item');
     const pages = document.querySelectorAll('.page');
     tabs.forEach(tab => {
@@ -547,10 +568,13 @@
             if (targetPage === 'earnPage') {
                 updateEarnUI();
             }
+            if (targetPage === 'referPage') {
+                updateReferralDisplay();
+            }
         });
     });
 
-    // ----- HOME PAGE (deposit / withdraw) -----
+    // Deposit functions
     window.showDeposit = function() {
         if (dailyDepositCount >= MAX_DAILY_DEPOSITS) {
             alert('❌ Daily deposit limit reached (2/2). Come back tomorrow.');
@@ -564,43 +588,58 @@
             document.getElementById('displayDepositAmount').innerText = amtInput.value || '1';
         };
     };
+    
     window.showWithdraw = function() {
         document.getElementById('depositPanelHome').style.display = 'none';
         document.getElementById('withdrawPanelHome').style.display = 'block';
     };
+    
     window.copyDepositAddress = function() {
         navigator.clipboard.writeText(depositTonAddress).then(() => alert('✅ Address copied'));
     };
+    
     window.simulateSent = function() {
         if (dailyDepositCount >= MAX_DAILY_DEPOSITS) {
             alert('❌ Daily deposit limit reached.');
             return;
         }
+        
         const amt = parseFloat(document.getElementById('depositAmountInput').value) || 1;
+        const senderAddress = document.getElementById('senderAddressInput').value.trim();
+        
         if (amt < 1) { alert('Minimum deposit 1 TON'); return; }
+        if (senderAddress === '') { alert('Please enter your sending TON address'); return; }
+        if (!senderAddress.startsWith('UQ')) { alert('Invalid TON address (should start with UQ)'); return; }
         
         dailyDepositCount++;
-        // Show pending popup now
         document.getElementById('depositPopup').style.display = 'flex';
         document.getElementById('popupUid').innerText = `UID: ${fixedUid} | Amount: ${amt} TON`;
+        document.getElementById('popupSender').innerText = `Sender: ${senderAddress.substring(0,6)}...${senderAddress.substring(senderAddress.length-4)}`;
         document.getElementById('depositsLeft').innerText = MAX_DAILY_DEPOSITS - dailyDepositCount;
         
-        // Close deposit panel
         document.getElementById('depositPanelHome').style.display = 'none';
         
-        // Simulate 1 hour delay before crediting
         setTimeout(() => {
             balance += amt;
             refreshBalanceUI();
-            alert(`✅ Deposit of ${amt} TON has been credited after 1 hour.`);
-        }, 3600000); // 1 hour in ms (3600000)
+            alert(`✅ Deposit of ${amt} TON from ${senderAddress.substring(0,6)}... has been credited after 1 hour.`);
+        }, 3600000);
         
-        alert(`⏳ Deposit of ${amt} TON recorded. It will be credited after 1 hour verification. (${MAX_DAILY_DEPOSITS - dailyDepositCount} deposits left today)`);
+        alert(`⏳ Deposit of ${amt} TON recorded from ${senderAddress.substring(0,6)}... It will be credited after 1 hour verification. (${MAX_DAILY_DEPOSITS - dailyDepositCount} deposits left today)`);
+        saveData();
     };
+    
     window.closePopup = function() {
         document.getElementById('depositPopup').style.display = 'none';
     };
+    
     window.processWithdraw = function() {
+        if (referralCount < 3) {
+            document.getElementById('currentRefCount').innerText = referralCount;
+            document.getElementById('withdrawRestrictionPopup').style.display = 'flex';
+            return;
+        }
+        
         const addr = document.getElementById('withdrawAddr').value.trim();
         const amount = parseFloat(document.getElementById('withdrawAmount').value);
         if (!addr.startsWith('UQ')) return alert('Invalid TON address (starts with UQ)');
@@ -615,9 +654,24 @@
         document.getElementById('withdrawPanelHome').style.display = 'none';
     };
 
-    // ----- REFER page (button already works) -----
+    window.closeWithdrawPopup = function() {
+        document.getElementById('withdrawRestrictionPopup').style.display = 'none';
+    };
 
-    // ----- EARN PAGE with gigapub -----
+    // Referral simulation
+    document.querySelector('.refer-link-btn').onclick = function(e) {
+        window.open('https://t.me/bxt_coin_io1_bot?start=r09829492066', '_blank');
+        setTimeout(() => {
+            referralCount++;
+            updateReferralDisplay();
+            saveData();
+            alert('✅ Referral recorded! +0.001 TON bonus (simulated)');
+            balance += 0.001;
+            refreshBalanceUI();
+        }, 3000);
+    };
+
+    // Earn page
     function updateEarnUI() {
         document.getElementById('watchedCount').innerText = watchedAds;
         document.getElementById('watchAdBtn').disabled = watchedAds >= MAX_ADS;
@@ -629,32 +683,19 @@
             return;
         }
 
-        if (typeof window.showGiga === 'function') {
-            window.showGiga()
-                .then(() => {
-                    watchedAds++;
-                    balance += AD_REWARD;
-                    refreshBalanceUI();
-                    updateEarnUI();
-                    alert(`+${AD_REWARD} TON earned! Total today: ${watchedAds}/30`);
-                })
-                .catch((e) => {
-                    console.error('Ad error:', e);
-                    alert('Ad could not be shown. Please try again later.');
-                });
-        } else {
-            alert('Ad service not ready. Using simulation.');
-            setTimeout(() => {
-                watchedAds++;
-                balance += AD_REWARD;
-                refreshBalanceUI();
-                updateEarnUI();
-                alert(`+${AD_REWARD} TON earned! Total today: ${watchedAds}/30 (simulated)`);
-            }, 1500);
-        }
+        // Simulate ad watch since GigaPub might not be loaded
+        setTimeout(() => {
+            watchedAds++;
+            balance += AD_REWARD;
+            refreshBalanceUI();
+            updateEarnUI();
+            alert(`+${AD_REWARD} TON earned! Total today: ${watchedAds}/30`);
+        }, 2000);
+        
+        alert('🎥 Watching ad... (2 seconds)');
     };
 
-    // ----- GAME PAGE (aviator logic with 0.1 min bet) - runs automatically -----
+    // Game functions
     function resizeCanvas() {
         canvas.width = canvas.parentElement.clientWidth;
         canvas.height = canvas.parentElement.clientHeight;
@@ -687,6 +728,7 @@
         updateTotalBet();
         if (!gameActive) updateBetStatus(betNum, bets[betNum].amount > 0 ? 'READY' : 'INACTIVE', bets[betNum].amount > 0 ? 'active' : '');
     }
+    
     window.adjustBet = function(betNum, delta) {
         const inp = document.getElementById(`bet${betNum}Amount`);
         let val = parseFloat(inp.value) + delta;
@@ -697,6 +739,7 @@
         updateTotalBet();
         if (!gameActive) updateBetStatus(betNum, bets[betNum].amount > 0 ? 'READY' : 'INACTIVE', bets[betNum].amount > 0 ? 'active' : '');
     };
+    
     function updateAutoCashout(betNum) {
         const inp = document.getElementById(`autoCashout${betNum}`);
         let v = parseFloat(inp.value) || 1.1;
@@ -704,6 +747,7 @@
         inp.value = v.toFixed(1);
         bets[betNum].autoCashout = v;
     }
+    
     function updateBetStatus(betNum, text, type) {
         const el = document.getElementById(`bet${betNum}Status`);
         el.textContent = text;
@@ -712,23 +756,15 @@
 
     function getRandomCrashPoint() {
         const r = Math.random();
-        if (r < 0.6) return 1 + Math.random() * 2;      // 1x - 3x
-        else if (r < 0.85) return 3 + Math.random() * 7; // 3x - 10x
-        else if (r < 0.95) return 10 + Math.random() * 20; // 10x - 30x
-        else return 30 + Math.random() * 70;            // 30x - 100x
-    }
-
-    function startAutoRound() {
-        // Always start a new round after a delay, regardless of bets
-        setTimeout(() => {
-            startRound();
-        }, 2000);
+        if (r < 0.6) return 1 + Math.random() * 2;
+        else if (r < 0.85) return 3 + Math.random() * 7;
+        else if (r < 0.95) return 10 + Math.random() * 20;
+        else return 30 + Math.random() * 70;
     }
 
     function startRound() {
         if (gameActive) return;
         
-        // Check which bets are active (based on amount)
         bets[1].active = bets[1].amount >= 0.1;
         bets[2].active = bets[2].amount > 0;
         
@@ -736,11 +772,9 @@
         if (bets[1].active) totalBet += bets[1].amount;
         if (bets[2].active) totalBet += bets[2].amount;
         
-        // Only deduct if there are active bets and sufficient balance
         if (totalBet > 0) {
             if (totalBet > balance) {
                 showMessage('⚠️ Insufficient balance! Cannot place bets.');
-                // Still start the round for viewing, but don't deduct
                 bets[1].active = false;
                 bets[2].active = false;
             } else {
@@ -749,7 +783,6 @@
             }
         }
         
-        // Start new round - game always runs for everyone to watch
         gameActive = true;
         currentMultiplier = 1.00;
         crashPoint = getRandomCrashPoint();
@@ -758,12 +791,10 @@
         bets[1].won = false;
         bets[2].won = false;
         
-        // Update UI
         document.getElementById('multiplier').textContent = '1.00x';
         document.getElementById('roundId').textContent = `#${roundId++}`;
         document.getElementById('playersCount').textContent = Math.floor(Math.random() * 200) + 50;
         
-        // Update status badges based on actual active bets (after balance check)
         if (bets[1].active) {
             updateBetStatus(1, 'FLYING', 'playing');
             document.getElementById('cashoutBtn1').disabled = false;
@@ -780,7 +811,6 @@
             document.getElementById('cashoutBtn2').disabled = true;
         }
         
-        // Game loop - updates every 50ms
         if (gameInterval) clearInterval(gameInterval);
         gameInterval = setInterval(() => {
             if (!gameActive) return;
@@ -788,7 +818,6 @@
             currentMultiplier += 0.01;
             document.getElementById('multiplier').textContent = currentMultiplier.toFixed(2) + 'x';
             
-            // Auto cashout checks
             if (bets[1].active && !bets[1].cashedOut && currentMultiplier >= bets[1].autoCashout) {
                 cashout(1, true);
             }
@@ -796,14 +825,12 @@
                 cashout(2, true);
             }
             
-            // Crash check
             if (currentMultiplier >= crashPoint) {
                 crash();
             }
         }, 50);
     }
 
-    // Cashout function
     window.cashout = function(betNum, isAuto = false) {
         if (!gameActive || bets[betNum].cashedOut || !bets[betNum].active) return;
         
@@ -820,14 +847,12 @@
         showMessage(`🎉 BET ${betNum} WON $${winAmount.toFixed(2)}!`);
     };
 
-    // Crash function - round ends
     function crash() {
         clearInterval(gameInterval);
         gameActive = false;
         
         document.getElementById('multiplier').innerHTML = `💥 ${crashPoint.toFixed(2)}x 💥`;
         
-        // Update any active bets that didn't cash out
         if (bets[1].active && !bets[1].cashedOut) {
             updateBetStatus(1, `LOST $${bets[1].amount.toFixed(2)}`, 'lost');
             document.getElementById('cashoutBtn1').disabled = true;
@@ -837,22 +862,23 @@
             document.getElementById('cashoutBtn2').disabled = true;
         }
         
-        // Add to history
         history.unshift(crashPoint);
         if (history.length > 12) history.pop();
         updateHistory();
         
         showMessage(`💥 Round ended at ${crashPoint.toFixed(2)}x`);
         
-        // Start next round automatically
-        startAutoRound();
+        // 5 second gap before next round
+        setTimeout(() => {
+            startRound();
+        }, 5000);
     }
 
     function showMessage(m) {
         document.getElementById('message').textContent = m;
     }
 
-    // Canvas drawing - shows the plane animation
+    // Canvas drawing
     function drawCanvas() {
         if (!canvas) return;
         
@@ -905,7 +931,6 @@
         }
     }
 
-    // Animation loop
     function animate() {
         drawCanvas();
         requestAnimationFrame(animate);
@@ -913,19 +938,20 @@
 
     // Initialize everything
     function init() {
+        loadSavedData();
         resizeCanvas();
         refreshBalanceUI();
         updateHistory();
         updateTotalBet();
-        startAutoRound(); // Start the first round
+        setTimeout(() => {
+            startRound();
+        }, 1000);
         animate();
         updateEarnUI();
     }
 
-    // Start everything
     init();
 
-    // Expose functions globally
     window.updateBetAmount = updateBetAmount;
     window.updateAutoCashout = updateAutoCashout;
 </script>
